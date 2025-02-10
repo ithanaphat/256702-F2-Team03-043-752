@@ -11,7 +11,7 @@ public class Player {
     public Player(double x, double y) {
         entity = FXGL.entityBuilder()
                 .at(x, y)
-                .view("player.png").scale(1.0, 1.0)
+                .view("player.png").scale(1.0, 1.0) //original 64x64 
                 .buildAndAttach();
     }
 

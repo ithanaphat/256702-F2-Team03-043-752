@@ -4,12 +4,13 @@ import java.util.Map;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.dsl.FXGL;
+import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.texture.Texture;
 
 import javafx.scene.text.Text;
 
 public class App extends GameApplication {
-    private Player player;
+    private Entity player; // ตัวละครหลัก
 
     public static void main(String[] args) {
         launch(args);
@@ -26,18 +27,18 @@ public class App extends GameApplication {
     @Override
     protected void initGame() {
         FXGL.getGameWorld().addEntity(Background.createBackground());
-        player = new Player(300, 300); // สร้างตัวละคร
-        player.registerControls(); // ลงทะเบียนปุ่มกด
-       
+
+        // ✅ ใช้ AnimationComponent เพื่อให้ตัวละครมีอนิเมชัน
+        player = FXGL.entityBuilder()
+                .at(300, 300)
+                .with(new AnimationComponent()) // 🎥 ใส่อนิเมชันที่ย้ายมาจาก SpriteSheetAnimationApp
+                .buildAndAttach();
+
+               
     }
 
     @Override
-    protected void initInput() {
-       
-    }
-
-    @Override
-    protected void initGameVars(Map<String, Object> vars) {
+    protected void initGameVars(java.util.Map<String, Object> vars) {
         vars.put("pixelsMoved", 0);
     }
 
@@ -57,8 +58,5 @@ public class App extends GameApplication {
 
         FXGL.getGameScene().addUINode(textLabel);
         FXGL.getGameScene().addUINode(textPixels);
-
-        
-
     }
 }
