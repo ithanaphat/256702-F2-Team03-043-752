@@ -9,7 +9,7 @@ public class Background {
     // เมธอดสร้างพื้นหลัง
     public static Entity createBackground() {
         return FXGL.entityBuilder()
-                .view(FXGL.texture("1.png"))  // ใช้ texture ของภาพ
+                .view(FXGL.texture("map.png"))  // ใช้ texture ของภาพ
                 .at(0, 0)  // ตำแหน่งที่ภาพจะปรากฏในฉาก
                 .build();
     }

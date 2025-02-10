@@ -18,8 +18,8 @@ public class App extends GameApplication {
 
     @Override
     protected void initSettings(GameSettings settings) {
-        settings.setWidth(1600);
-        settings.setHeight(800);
+        settings.setWidth(1280);
+        settings.setHeight(720);
         settings.setTitle("The Last Adventurer");
         settings.setVersion("0.1");
     }
