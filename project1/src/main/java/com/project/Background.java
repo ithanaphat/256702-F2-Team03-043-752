@@ -2,7 +2,6 @@ package com.project;
 
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.dsl.FXGL;
-import javafx.scene.image.Image;
 
 public class Background {
 

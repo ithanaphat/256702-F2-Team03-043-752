@@ -1,16 +1,16 @@
 package com.project;
 
-import java.util.Map;
+
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
-import com.almasb.fxgl.texture.Texture;
 
-import javafx.scene.text.Text;
 
 public class App extends GameApplication {
     private Entity player; // ตัวละครหลัก
+    private Stats stats;
+    private UIManager uiManager; // สร้างตัวแปร UIManager
 
     public static void main(String[] args) {
         launch(args);
@@ -34,7 +34,10 @@ public class App extends GameApplication {
                 .with(new AnimationComponent()) // 🎥 ใส่อนิเมชันที่ย้ายมาจาก SpriteSheetAnimationApp
                 .buildAndAttach();
 
-               
+        // สร้าง Stats และ UIManager
+        stats = new Stats(100, 0,100,1);
+        uiManager = new UIManager(stats); // สร้าง UIManager ที่เชื่อมกับ Stats
+        uiManager.initUI(); // เรียกใช้งานการสร้าง UI
     }
 
     @Override
@@ -43,20 +46,11 @@ public class App extends GameApplication {
     }
 
     @Override
-    protected void initUI() {
-        Text textLabel = new Text("Moved: ");
-        Text textPixels = new Text();
+    protected void onUpdate(double tpf) {
+        super.onUpdate(tpf);
 
-        textLabel.setTranslateX(30);
-        textLabel.setTranslateY(50);
-        textPixels.setTranslateX(80);
-        textPixels.setTranslateY(50);
-
-        textPixels.textProperty().bind(
-                FXGL.getWorldProperties().intProperty("pixelsMoved").asString()
-        );
-
-        FXGL.getGameScene().addUINode(textLabel);
-        FXGL.getGameScene().addUINode(textPixels);
+        // อัปเดตพลังชีวิตและคะแนนใน World Properties
+        FXGL.getWorldProperties().setValue("health", stats.getHealth());
+        FXGL.getWorldProperties().setValue("score", stats.getScore());
     }
 }

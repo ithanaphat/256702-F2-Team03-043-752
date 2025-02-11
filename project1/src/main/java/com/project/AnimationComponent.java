@@ -1,14 +1,12 @@
 package com.project;
 
-import com.almasb.fxgl.app.GameApplication;
-import com.almasb.fxgl.app.GameSettings;
+
 import com.almasb.fxgl.dsl.FXGL;
-import com.almasb.fxgl.entity.Entity;
+
 import com.almasb.fxgl.input.UserAction;
 import javafx.scene.input.KeyCode;
 
-import com.almasb.fxgl.core.math.FXGLMath;
-import com.almasb.fxgl.dsl.FXGL;
+
 import com.almasb.fxgl.entity.component.Component;
 import com.almasb.fxgl.texture.AnimatedTexture;
 import com.almasb.fxgl.texture.AnimationChannel;
@@ -49,7 +47,7 @@ public class AnimationComponent extends Component {
     }
 
     @Override
-public void onUpdate(double tpf) {
+    public void onUpdate(double tpf) {
     entity.translateX(speedX * tpf);
     entity.translateY(speedY * tpf);
 
