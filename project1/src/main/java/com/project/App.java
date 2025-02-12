@@ -39,12 +39,13 @@ public class App extends GameApplication {
         FXGL.getGameWorld().addEntity(Background.createBackground());
         /*Level level = FXGL.getAssetLoader().loadLevel("assets/textures/map.tmx", new TMXLevelLoader());
         FXGL.getGameWorld().setLevel(level);*/
+        String image = "playerimage.png";
         
         // ✅ ใช้ AnimationComponent เพื่อให้ตัวละครมีอนิเมชัน
         player = FXGL.entityBuilder()
                 .at(300, 300)
                 .viewWithBBox(new Rectangle(64, 64, Color.BLUE))
-                .with(new AnimationComponent()) // 🎥 ใส่อนิเมชันที่ย้ายมาจาก SpriteSheetAnimationApp
+                .with(new AnimationComponent(image)) // 🎥 ใส่อนิเมชันที่ย้ายมาจาก SpriteSheetAnimationApp
                 .buildAndAttach();
 
         // สร้าง Stats และ UIManager

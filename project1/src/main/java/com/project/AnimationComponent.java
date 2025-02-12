@@ -22,17 +22,17 @@ public class AnimationComponent extends Component {
     private AnimationChannel animWalkUpRight, animWalkUpLeft, animWalkDownRight, animWalkDownLeft;
 
 
-    public AnimationComponent() {
-        animIdle = new AnimationChannel(FXGL.image("spritesheet.png"), 4, 64, 64, Duration.seconds(1), 0, 0);
-        animWalkDown = new AnimationChannel(FXGL.image("spritesheet.png"), 4, 64, 64, Duration.seconds(0.5), 0, 3);
-        animWalkLeft = new AnimationChannel(FXGL.image("spritesheet.png"), 4, 64, 64, Duration.seconds(0.5), 4, 7);
-        animWalkRight = new AnimationChannel(FXGL.image("spritesheet.png"), 4, 64, 64, Duration.seconds(0.5), 8, 11);
-        animWalkUp = new AnimationChannel(FXGL.image("spritesheet.png"), 4, 64, 64, Duration.seconds(0.5), 12, 15);
+    public AnimationComponent(String image) {
+        animIdle = new AnimationChannel(FXGL.image(image), 4, 64, 64, Duration.seconds(1), 0, 0);
+        animWalkDown = new AnimationChannel(FXGL.image(image), 4, 64, 64, Duration.seconds(0.5), 0, 3);
+        animWalkLeft = new AnimationChannel(FXGL.image(image), 4, 64, 64, Duration.seconds(0.5), 4, 7);
+        animWalkRight = new AnimationChannel(FXGL.image(image), 4, 64, 64, Duration.seconds(0.5), 8, 11);
+        animWalkUp = new AnimationChannel(FXGL.image(image), 4, 64, 64, Duration.seconds(0.5), 12, 15);
 
-        animWalkUpRight = new AnimationChannel(FXGL.image("spritesheet.png"), 4, 64, 64, Duration.seconds(0.5), 12, 15);
-        animWalkUpLeft = new AnimationChannel(FXGL.image("spritesheet.png"), 4, 64, 64, Duration.seconds(0.5), 12, 15);
-        animWalkDownRight = new AnimationChannel(FXGL.image("spritesheet.png"), 4, 64, 64, Duration.seconds(0.5), 0, 3);
-        animWalkDownLeft = new AnimationChannel(FXGL.image("spritesheet.png"), 4, 64, 64, Duration.seconds(0.5), 0, 3);
+        animWalkUpRight =  animWalkUp;
+        animWalkUpLeft = animWalkUp;
+        animWalkDownRight = animWalkDown;
+        animWalkDownLeft = animWalkDown;
 
 
 
