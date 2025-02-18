@@ -1,26 +1,19 @@
 package com.project;
 
+import static com.almasb.fxgl.dsl.FXGL.getPhysicsWorld;
 
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
-import com.almasb.fxgl.entity.level.Level;
-import com.almasb.fxgl.entity.level.text.TextLevelLoader;
-import com.almasb.fxgl.entity.level.tiled.TMXLevelLoader;
-import com.almasb.fxgl.entity.level.tiled.TiledMap;
-import com.almasb.fxgl.entity.level.tiled.TilesetLoader;
-
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-
-import static com.almasb.fxgl.dsl.FXGL.*;
+import com.almasb.fxgl.physics.PhysicsComponent;
+import com.almasb.fxgl.physics.PhysicsWorld;
+import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
 
 
 public class App extends GameApplication {
-    private Entity player; // ตัวละครหลัก
     private Stats stats;
-    private UIManager uiManager; // สร้างตัวแปร UIManager
+    private UIManager uiManager;
 
     public static void main(String[] args) {
         launch(args);
@@ -35,25 +28,38 @@ public class App extends GameApplication {
     }
 
     @Override
-    protected void initGame() {
-        FXGL.getGameWorld().addEntity(Background.createBackground());
-        /*Level level = FXGL.getAssetLoader().loadLevel("assets/textures/map.tmx", new TMXLevelLoader());
-        FXGL.getGameWorld().setLevel(level);*/
-        String image = "playerimage.png";
-        
-        // ✅ ใช้ AnimationComponent เพื่อให้ตัวละครมีอนิเมชัน
-        player = FXGL.entityBuilder()
-                .at(300, 300)
-                .viewWithBBox(new Rectangle(64, 64, Color.BLUE))
-                .with(new AnimationComponent(image)) // 🎥 ใส่อนิเมชันที่ย้ายมาจาก SpriteSheetAnimationApp
-                .buildAndAttach();
+    protected void initPhysics() {
+        PhysicsWorld physicsWorld = getPhysicsWorld();
+        physicsWorld.setGravity(0, 0);
 
-        // สร้าง Stats และ UIManager
-        stats = new Stats(100, 0,100,1);
+    }
+
+    @Override
+    protected void initGame() {
+        //รูปภาพผู้เล่น
+        String image = "playerimage.png";
+        //ส่งรูปไปในanimation
+        Player player = new Player(image);
+        //สร้างพื้นหลัง
+        FXGL.getGameWorld().addEntity(Background.createBackground());
+        PhysicsComponent physics = new PhysicsComponent();
+        physics.setBodyType(BodyType.STATIC);
+        //สร้างผู้เล่นs
+        player.createPlayer(50,50);
+        //สร้างกำแพง
+        Entity wall1 = Wall.createWall(649.60, 10.22,309.47,147.44);
+        Entity wall2 = Wall.createWall(0, 595.26,780.31,154.74);
+        Entity wall3 = Wall.createWall(970.75, 13.14,145.98,464.21);
+        FXGL.getGameWorld().addEntity(wall1);
+        FXGL.getGameWorld().addEntity(wall2);
+        FXGL.getGameWorld().addEntity(wall3);
+        //สร้างstats
+        stats = new Stats(100, 0, 100, 1);
         uiManager = new UIManager(stats); // สร้าง UIManager ที่เชื่อมกับ Stats
         uiManager.initUI(); // เรียกใช้งานการสร้าง UI
+
+
     }
-    
 
     @Override
     protected void initGameVars(java.util.Map<String, Object> vars) {
