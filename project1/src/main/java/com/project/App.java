@@ -1,11 +1,15 @@
 package com.project;
 
+import static com.almasb.fxgl.dsl.FXGL.entityBuilder;
+import static com.almasb.fxgl.dsl.FXGL.getAppHeight;
+import static com.almasb.fxgl.dsl.FXGL.getAppWidth;
 import static com.almasb.fxgl.dsl.FXGL.getPhysicsWorld;
 
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
+import com.almasb.fxgl.physics.BoundingShape;
 import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.physics.PhysicsWorld;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
@@ -18,6 +22,7 @@ public class App extends GameApplication {
     public static void main(String[] args) {
         launch(args);
     }
+    
 
     @Override
     protected void initSettings(GameSettings settings) {
@@ -32,7 +37,32 @@ public class App extends GameApplication {
         PhysicsWorld physicsWorld = getPhysicsWorld();
         physicsWorld.setGravity(0, 0);
 
+        entityBuilder()
+                .at(-30, -30)
+                .bbox(BoundingShape.box(getAppWidth(), 10)) // กำแพงด้านบน
+                .with(new PhysicsComponent())
+                .buildAndAttach();
+
+        entityBuilder()
+                .at(0, getAppHeight() - 0)
+                .bbox(BoundingShape.box(getAppWidth(), 10)) // กำแพงด้านล่าง
+                .with(new PhysicsComponent())
+                .buildAndAttach();
+
+        entityBuilder()
+                .at(-30, -30)
+                .bbox(BoundingShape.box(10, getAppHeight())) // กำแพงด้านซ้าย
+                .with(new PhysicsComponent())
+                .buildAndAttach();
+
+        entityBuilder()
+                .at(getAppWidth() + 30, 0)
+                .bbox(BoundingShape.box(10, getAppHeight())) // กำแพงด้านขวา
+                .with(new PhysicsComponent())
+                .buildAndAttach();
+                
     }
+    
 
     @Override
     protected void initGame() {
@@ -47,12 +77,8 @@ public class App extends GameApplication {
         //สร้างผู้เล่นs
         player.createPlayer(50,50);
         //สร้างกำแพง
-        Entity wall1 = Wall.createWall(649.60, 10.22,309.47,147.44);
-        Entity wall2 = Wall.createWall(0, 595.26,780.31,154.74);
-        Entity wall3 = Wall.createWall(970.75, 13.14,145.98,464.21);
-        FXGL.getGameWorld().addEntity(wall1);
-        FXGL.getGameWorld().addEntity(wall2);
-        FXGL.getGameWorld().addEntity(wall3);
+        Entity wall = Wall.createWall(1.33, 596.00,766.67,137.33);
+        FXGL.getGameWorld().addEntity(wall);
         //สร้างstats
         stats = new Stats(100, 0, 100, 1);
         uiManager = new UIManager(stats); // สร้าง UIManager ที่เชื่อมกับ Stats

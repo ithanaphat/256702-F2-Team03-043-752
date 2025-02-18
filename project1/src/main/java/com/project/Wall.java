@@ -1,5 +1,7 @@
 package com.project;
 
+import static com.almasb.fxgl.dsl.FXGL.texture;
+
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.components.CollidableComponent;
@@ -22,7 +24,7 @@ public class Wall {
                 .type(EntityType.WALL)
                 .bbox(new HitBox(BoundingShape.box(width, height)))
                 .bbox(new HitBox("WallBox", new Point2D(0, 0), BoundingShape.box(width, height)))
-                .viewWithBBox(new Rectangle(width, height, Color.BLUE))
+                .viewWithBBox(new Rectangle(width, height , Color.TRANSPARENT))
                 .with(physics, new CollidableComponent(true))
                 .build();
     }
