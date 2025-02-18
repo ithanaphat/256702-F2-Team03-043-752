@@ -1,7 +1,5 @@
 package com.project;
 
-import static com.almasb.fxgl.dsl.FXGL.texture;
-
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.components.CollidableComponent;

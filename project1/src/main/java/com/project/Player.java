@@ -1,11 +1,7 @@
 package com.project;
 
-import static com.almasb.fxgl.dsl.FXGL.getAppHeight;
-import static com.almasb.fxgl.dsl.FXGL.getAppWidth;
-
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
-import com.almasb.fxgl.entity.component.Component;
 import com.almasb.fxgl.entity.components.CollidableComponent;
 import com.almasb.fxgl.physics.BoundingShape;
 import com.almasb.fxgl.physics.HitBox;
@@ -26,7 +22,7 @@ public class Player {
         physics.setBodyType(BodyType.DYNAMIC);
 
         player = FXGL.entityBuilder()
-                .at(300, 300)
+                .at(944, 416)
                 .type(EntityType.PLAYER)
                 .bbox(new HitBox("Body", BoundingShape.box(width, height)))
                 .bbox(new HitBox("Body", new Point2D(12, 14), BoundingShape.box(width, height)))
