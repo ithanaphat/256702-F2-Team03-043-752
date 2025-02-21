@@ -2,10 +2,10 @@ package com.project;
 
 import com.almasb.fxgl.entity.component.Component;
 
-public class HealthComponent extends Component {
+public class Health extends Component {
     private int health;
 
-    public HealthComponent(int initialHealth) {
+    public Health(int initialHealth) {
         this.health = initialHealth;
     }
 

@@ -12,6 +12,7 @@ import javafx.geometry.Point2D;
 public class Player {
     private Entity player;
     private Animation animationComponent;
+    
 
     public Player(String image) {
         animationComponent = new Animation(image); // ส่งชื่อไฟล์ไปยัง Animation
@@ -26,7 +27,7 @@ public class Player {
                 .type(EntityType.PLAYER)
                 .bbox(new HitBox("Body", BoundingShape.box(50, 50)))
                 .bbox(new HitBox("Body", new Point2D(12, 14), BoundingShape.box(50, 50)))
-                .with(physics, animationComponent, new CollidableComponent(true),new HealthComponent(100)) // เพิ่ม AnimationComponent เข้าไป
+                .with(physics, animationComponent, new CollidableComponent(true),new Health(100)) // เพิ่ม AnimationComponent เข้าไป
                 .buildAndAttach();
 
         return player;

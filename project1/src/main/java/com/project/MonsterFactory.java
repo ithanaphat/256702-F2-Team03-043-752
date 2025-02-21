@@ -28,7 +28,7 @@ public class MonsterFactory implements EntityFactory {
         .viewWithBBox("dracomachina.png")
         .bbox(new HitBox("Body", BoundingShape.box(50, 50)))
         .bbox(new HitBox("Body", new Point2D(12, 14), BoundingShape.box(50, 50)))
-        .with(new CollidableComponent(true), physics)
+        .with(new CollidableComponent(true), physics,new Health(50))
         .build();
 
         monster.addComponent(new MonsterAI(physics));
@@ -57,5 +57,7 @@ public class MonsterFactory implements EntityFactory {
                 physics.setVelocityY(direction.getY() * SPEED);
             }
         }
+
+        
     }
 }

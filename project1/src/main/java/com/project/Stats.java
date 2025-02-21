@@ -5,11 +5,11 @@ import javafx.beans.property.SimpleIntegerProperty;
 
 public class Stats {
 
-    private IntegerProperty health = new SimpleIntegerProperty(100);
+    private IntegerProperty health;
     private IntegerProperty score;
     private IntegerProperty attack;
     private IntegerProperty level;
-    private final int maxHealth = 100;
+    private final int maxHealth;
 
     
 
@@ -18,6 +18,7 @@ public class Stats {
         this.score = new SimpleIntegerProperty(score);
         this.attack = new SimpleIntegerProperty(attack);
         this.level = new SimpleIntegerProperty(level);
+        maxHealth = health;
     }
 
     // Getter และ Setter สำหรับ health
@@ -56,9 +57,7 @@ public class Stats {
         this.attack.set(attack);
     }
 
-    public Stats(int health) {
-        this.health.set(health);
-    }
+    
 
     public int getHealth() {
         return health.get();

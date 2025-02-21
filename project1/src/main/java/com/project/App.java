@@ -18,6 +18,8 @@ import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.physics.PhysicsWorld;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
 import javafx.util.Duration;
+import com.project.Attack;
+
 
 
 public class App extends GameApplication {
@@ -72,6 +74,12 @@ public class App extends GameApplication {
                 });;
                 
     }
+
+    @Override
+protected void initInput() {
+    Attack.init(); // ✅ เรียกใช้ระบบโจมตีเมื่อคลิกซ้าย
+}
+
     
     
 
@@ -100,7 +108,7 @@ public class App extends GameApplication {
         FXGL.getGameWorld().addEntity(wall);
 
         //สร้างstats
-        stats = new Stats(100, 0, 100, 1);
+        stats = new Stats(200, 0, 100, 1);
 
         uiManager = new UIManager(stats); // สร้าง UIManager ที่เชื่อมกับ Stats
 
