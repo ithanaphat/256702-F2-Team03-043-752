@@ -17,16 +17,16 @@ public class Player {
         animationComponent = new Animation(image); // ส่งชื่อไฟล์ไปยัง Animation
     }
 
-    public Entity createPlayer(double width , double height) {
+    public Entity createPlayer() {
         PhysicsComponent physics = new PhysicsComponent();
         physics.setBodyType(BodyType.DYNAMIC);
 
         player = FXGL.entityBuilder()
                 .at(944, 416)
                 .type(EntityType.PLAYER)
-                .bbox(new HitBox("Body", BoundingShape.box(width, height)))
-                .bbox(new HitBox("Body", new Point2D(12, 14), BoundingShape.box(width, height)))
-                .with(physics, animationComponent, new CollidableComponent(true)) // เพิ่ม AnimationComponent เข้าไป
+                .bbox(new HitBox("Body", BoundingShape.box(50, 50)))
+                .bbox(new HitBox("Body", new Point2D(12, 14), BoundingShape.box(50, 50)))
+                .with(physics, animationComponent, new CollidableComponent(true),new HealthComponent(100)) // เพิ่ม AnimationComponent เข้าไป
                 .buildAndAttach();
 
         return player;

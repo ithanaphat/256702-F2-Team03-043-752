@@ -66,10 +66,10 @@ public class App extends GameApplication {
                 .with(new PhysicsComponent())
                 .buildAndAttach();
 
-        onCollisionBegin(EntityType.MONSTER, EntityType.PLAYER, (monster, player) -> {
-            player.getComponent(com.almasb.fxgl.dsl.components.HealthIntComponent.class).damage(10);
-            FXGL.getNotificationService().pushNotification("Player hit! HP -10");
-        });
+                onCollisionBegin(EntityType.MONSTER, EntityType.PLAYER, (monster, player) -> {
+                    stats.damage(10); // ✅ ลดพลังชีวิตลง 10
+                    uiManager.updateHealthDisplay(); // ✅ อัปเดต Health Bar
+                });;
                 
     }
     
@@ -89,7 +89,7 @@ public class App extends GameApplication {
         physics.setBodyType(BodyType.STATIC);
 
         //สร้างผู้เล่นs
-        player.createPlayer(50,50);
+        player.createPlayer();
 
         // สร้างมอนสเตอร์
         getGameWorld().addEntityFactory(new MonsterFactory());
@@ -116,8 +116,6 @@ public class App extends GameApplication {
     protected void onUpdate(double tpf) {
         super.onUpdate(tpf);
 
-        // อัปเดตพลังชีวิตและคะแนนใน World Properties
-        FXGL.getWorldProperties().setValue("health", stats.getHealth());
-        FXGL.getWorldProperties().setValue("score", stats.getScore());
+        
     }
 }
