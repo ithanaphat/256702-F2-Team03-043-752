@@ -11,6 +11,7 @@ import static com.almasb.fxgl.dsl.FXGL.spawn;
 
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
+import com.almasb.fxgl.app.scene.FXGLMenu;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.physics.BoundingShape;
@@ -37,6 +38,8 @@ public class App extends GameApplication {
         settings.setHeight(720);
         settings.setTitle("The Last Adventurer");
         settings.setVersion("0.1");
+
+        settings.setMainMenuEnabled(true);
     }
 
     @Override
@@ -125,5 +128,9 @@ protected void initInput() {
         super.onUpdate(tpf);
 
         
+    }
+
+    protected FXGLMenu getMainMenu() {
+        return new StartScreen();
     }
 }
