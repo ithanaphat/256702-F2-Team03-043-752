@@ -9,7 +9,7 @@ import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
 import javafx.geometry.Point2D;
 
-public class Player {
+public class Player extends Entity {
     private Entity player;
     private Animation animationComponent;
     

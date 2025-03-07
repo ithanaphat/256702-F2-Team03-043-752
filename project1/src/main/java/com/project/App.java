@@ -6,7 +6,6 @@ import static com.almasb.fxgl.dsl.FXGL.getAppWidth;
 import static com.almasb.fxgl.dsl.FXGL.getGameWorld;
 import static com.almasb.fxgl.dsl.FXGL.getPhysicsWorld;
 import static com.almasb.fxgl.dsl.FXGL.onCollisionBegin;
-import static com.almasb.fxgl.dsl.FXGL.run;
 import static com.almasb.fxgl.dsl.FXGL.spawn;
 
 import com.almasb.fxgl.app.GameApplication;
@@ -14,24 +13,23 @@ import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.app.scene.FXGLMenu;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
+import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.BoundingShape;
 import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.physics.PhysicsWorld;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
-import javafx.util.Duration;
-import com.project.Attack;
 
-
+import javafx.scene.input.KeyCode;
 
 public class App extends GameApplication {
     private Stats stats;
     private UIManager uiManager;
+    private SkillSystem skillSystem;
 
     public static void main(String[] args) {
         launch(args);
     }
     
-
     @Override
     protected void initSettings(GameSettings settings) {
         settings.setWidth(1280);
@@ -81,10 +79,27 @@ public class App extends GameApplication {
     @Override
 protected void initInput() {
     Attack.init(); // ✅ เรียกใช้ระบบโจมตีเมื่อคลิกซ้าย
-}
+    FXGL.getInput().addAction(new UserAction("Skill Q") {
+        @Override
+        protected void onActionBegin() {
+            skillSystem.activateSkill(KeyCode.Q);
+        }
+    }, KeyCode.Q);
 
-    
-    
+    FXGL.getInput().addAction(new UserAction("Skill E") {
+        @Override
+        protected void onActionBegin() {
+            skillSystem.activateSkill(KeyCode.E);
+        }
+    }, KeyCode.E);
+
+    FXGL.getInput().addAction(new UserAction("Skill R") {
+        @Override
+        protected void onActionBegin() {
+            skillSystem.activateSkill(KeyCode.R);
+        }
+    }, KeyCode.R);
+}   
 
     @Override
     protected void initGame() {
@@ -116,6 +131,8 @@ protected void initInput() {
         uiManager = new UIManager(stats); // สร้าง UIManager ที่เชื่อมกับ Stats
 
         uiManager.initUI(); // เรียกใช้งานการสร้าง UI
+
+        skillSystem = new SkillSystem(player); // ✅ สร้าง SkillSystem ที่เชื่อมกับ Player
     }
 
     @Override
@@ -126,8 +143,6 @@ protected void initInput() {
     @Override
     protected void onUpdate(double tpf) {
         super.onUpdate(tpf);
-
-        
     }
 
     protected FXGLMenu getMainMenu() {
