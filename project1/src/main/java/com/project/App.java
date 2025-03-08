@@ -77,8 +77,9 @@ public class App extends GameApplication {
     }
 
     @Override
-protected void initInput() {
+    protected void initInput() {
     Attack.init(); // ✅ เรียกใช้ระบบโจมตีเมื่อคลิกซ้าย
+    
     FXGL.getInput().addAction(new UserAction("Skill Q") {
         @Override
         protected void onActionBegin() {
@@ -99,7 +100,7 @@ protected void initInput() {
             skillSystem.activateSkill(KeyCode.R);
         }
     }, KeyCode.R);
-}   
+    }   
 
     @Override
     protected void initGame() {
