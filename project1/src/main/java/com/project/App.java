@@ -116,7 +116,7 @@ public class App extends GameApplication {
         physics.setBodyType(BodyType.STATIC);
 
         //สร้างผู้เล่นs
-        player.createPlayer();
+        player.createPlayer(200, 0, 100, 1);
 
         // สร้างมอนสเตอร์
         getGameWorld().addEntityFactory(new MonsterFactory());
@@ -132,6 +132,8 @@ public class App extends GameApplication {
         uiManager = new UIManager(stats); // สร้าง UIManager ที่เชื่อมกับ Stats
 
         uiManager.initUI(); // เรียกใช้งานการสร้าง UI
+
+        
 
         skillSystem = new SkillSystem(player); // ✅ สร้าง SkillSystem ที่เชื่อมกับ Player
     }

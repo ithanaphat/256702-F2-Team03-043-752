@@ -5,6 +5,7 @@ import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.entity.Entity;
 import javafx.geometry.Point2D;
 import javafx.scene.input.MouseButton;
+import javafx.scene.paint.Color;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
 
@@ -17,14 +18,19 @@ public class Attack {
                 Entity player = getGameWorld().getSingleton(EntityType.PLAYER);
                 Point2D playerPos = player.getPosition();
 
+
+                
+                // Trigger attack effect
+                Animation.playAttackEffect(playerPos,Color.RED,Color.ORANGE);
+
                 // หา Monster ที่ใกล้ที่สุด
                 Entity nearestMonster = getGameWorld().getEntitiesByType(EntityType.MONSTER).stream()
-                    .min((m1, m2) -> {
-                        double d1 = m1.getPosition().distance(playerPos);
-                        double d2 = m2.getPosition().distance(playerPos);
-                        return Double.compare(d1, d2);
-                    })
-                    .orElse(null);
+                        .min((m1, m2) -> {
+                            double d1 = m1.getPosition().distance(playerPos);
+                            double d2 = m2.getPosition().distance(playerPos);
+                            return Double.compare(d1, d2);
+                        })
+                        .orElse(null);
 
                 // ถ้าเจอมอนสเตอร์ที่อยู่ในระยะ ให้ลดพลังชีวิต
                 if (nearestMonster != null && playerPos.distance(nearestMonster.getPosition()) < 80) {
@@ -33,7 +39,14 @@ public class Attack {
 
                     // ถ้าพลังชีวิตหมด ให้ลบมอนสเตอร์ออกจากเกม
                     if (health.getHealth() <= 0) {
+
+                         // Trigger death effect
+                         Animation.playEffect(nearestMonster.getPosition(),Color.BLACK,Color.BLACK);
+
                         nearestMonster.removeFromWorld();
+                      //  Stats playerStats = player.getComponent(Stats.class);
+                        //playerStats.addExperience(10);
+                        
                     }
                 }
             }
