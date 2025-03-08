@@ -47,7 +47,16 @@ public class SkillSystem {
             System.out.println("A skill is already active! Wait for cooldown.");
             return;
         }
+        
+        if (!player.hasComponent(Stats.class)) {
+            System.out.println("Error: Player does not have Stats component!");
+            return;
+        }
 
+        Stats stats = player.getComponent(Stats.class);
+        int manaCost = getManaCostForSkill(keyCode);
+        stats.setMana(stats.getMana() - manaCost);
+        
         isSkillActive = true; // ✅ ตั้งค่ากำลังใช้สกิล
         switch (keyCode) {
             case Q -> {
@@ -64,6 +73,25 @@ public class SkillSystem {
             }
             default -> System.out.println("No skill assigned to this key.");
         }
+    }
+
+    public void startManaRegeneration() {
+        run(() -> {
+            Stats stats = player.getComponent(Stats.class);
+            if (stats.getMana() < stats.getMaxMana()) {
+                stats.setMana(stats.getMana() + 1); // เพิ่มมานาทีละ 1
+            }
+        }, Duration.seconds(1));
+    }
+
+    // ฟังก์ชันกำหนดค่ามานาสำหรับแต่ละสกิล
+    private int getManaCostForSkill(KeyCode keyCode) {
+        return switch (keyCode) {
+            case Q -> 10;
+            case E -> 15;
+            case R -> 20;
+            default -> 0;
+        };
     }
 
     private void skillOne() {
