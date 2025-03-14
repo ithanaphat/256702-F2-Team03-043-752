@@ -1,11 +1,13 @@
 package com.project;
 
+import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.component.Component;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import java.time.Duration;
 
-public class Stats extends Component{
+public class Stats extends Component {
 
     private IntegerProperty health;
     private IntegerProperty score;
@@ -13,8 +15,6 @@ public class Stats extends Component{
     private IntegerProperty level;
     private IntegerProperty experience;
     private final int maxHealth;
-
-    
 
     public Stats(int health, int score, int attack, int level) {
         this.health = new SimpleIntegerProperty(health);
@@ -59,6 +59,17 @@ public class Stats extends Component{
     public void setAttack(int attack) {
         this.attack.set(attack);
     }
+
+    public void increaseAttackTemporarily(int value, Duration duration) {
+        int originalAttack = getAttack();
+        setAttack(originalAttack + value);
+        System.out.println("Temporary Attack Boost: " + getAttack());
+    
+        FXGL.runOnce(() -> {
+            setAttack(originalAttack);
+            System.out.println("Attack Boost Ended: " + getAttack());
+        }, javafx.util.Duration.millis(duration.toMillis()));
+    }
     
     public int getHealth() {
         return health.get();
@@ -70,6 +81,10 @@ public class Stats extends Component{
 
     public int getMaxHealth() {
         return maxHealth;
+    }
+
+    public void heal(int amount) {
+        health.set(Math.min(health.get() + amount, maxHealth));
     }
 
     public IntegerProperty healthProperty() {
@@ -85,15 +100,25 @@ public class Stats extends Component{
     }
 
     public void setExperience(int experience) {
+        System.out.println("Before setExperience: " + this.experience.get());
         this.experience.set(experience);
+        System.out.println("After setExperience: " + this.experience.get());
+    }
+
+    public IntegerProperty experienceProperty() {
+        return experience;
     }
 
     public void addExperience(int amount) {
         experience.set(experience.get() + amount);
-        while (experience.get() >= getExperienceForNextLevel()) {
-            experience.set(experience.get() - getExperienceForNextLevel());
-            level.set(level.get() + 1);
-        }
+    System.out.println("Exp Updated in Stats: " + getExperience());
+
+    while (experience.get() >= getExperienceForNextLevel()) {
+        experience.set(experience.get() - getExperienceForNextLevel());
+        level.set(level.get() + 1);
+    }
+
+    
     }
 
     int getExperienceForNextLevel() {
@@ -106,8 +131,4 @@ public class Stats extends Component{
             return 30;
         }
     }
-
-    
-
-
 }

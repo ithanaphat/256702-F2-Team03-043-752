@@ -66,12 +66,13 @@ public class SkillSystem {
 
     private void skillOne() {
         System.out.println("healเต็มเลือดซะะะ!!!");
-        modifyPlayerStat(10);
+        player.getStats().heal(20); // เพิ่มการฟื้นฟูเลือด
         play("skill1_sound.mp3");
     }
 
     private void skillTwo() {
         System.out.println("หมัดอันทรงพลังงงงง!!!");
+        player.getStats().increaseAttackTemporarily(20, java.time.Duration.ofSeconds(5)); // เพิ่มการ
         play("skill2_sound.mp3");
     }
 

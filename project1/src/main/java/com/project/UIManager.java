@@ -13,8 +13,14 @@ public class UIManager {
     private Text levelText; // ✅ ข้อความแสดงค่า Level
     private Text attackText; // ✅ ข้อความแสดงค่าพลังโจมต
 
-    public UIManager(Stats stats) {
-        this.stats = stats;
+    public UIManager() {
+        this.stats = FXGL.geto("playerStats");
+
+        // เพิ่มการตั้งค่า UIManager ให้ฟังการอัปเดตจาก Stats
+        stats.experienceProperty().addListener((obs, oldVal, newVal) -> {
+            System.out.println("Exp Updated in UIManager: " + newVal);
+            updateHealthDisplay(); // อัปเดต UI ทันทีเมื่อค่าประสบการณ์เปลี่ยน
+        });
     }
 
     public void initUI() {
@@ -27,19 +33,19 @@ public class UIManager {
 
         // ✅ สร้างพื้นหลังของ Health Bar
         Rectangle healthBarBackground = new Rectangle(200, 20);
-        healthBarBackground.setTranslateX(70);
+        healthBarBackground.setTranslateX(120);
         healthBarBackground.setTranslateY(15);
         healthBarBackground.setFill(Color.GRAY);
 
         // ✅ สร้าง Health Bar สีแดง
         healthBar = new Rectangle(200, 20);
-        healthBar.setTranslateX(70);
+        healthBar.setTranslateX(120);
         healthBar.setTranslateY(15);
         healthBar.setFill(Color.RED);
 
         // ✅ แสดงค่า HP เป็นตัวเลข
         healthText = new Text();
-        healthText.setTranslateX(280);
+        healthText.setTranslateX(330);
         healthText.setTranslateY(30);
         healthText.setFill(Color.WHITE);
         healthText.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
@@ -53,14 +59,14 @@ public class UIManager {
 
         // ✅ สร้างพื้นหลังของ Level Bar
         Rectangle levelBarBackground = new Rectangle(200, 5);
-        levelBarBackground.setTranslateX(60);
-        levelBarBackground.setTranslateY(75);
+        levelBarBackground.setTranslateX(120);
+        levelBarBackground.setTranslateY(50);
         levelBarBackground.setFill(Color.GRAY);
 
         // ✅ สร้าง Level Bar สีน้ำเงิน
         levelBar = new Rectangle(200, 5);
-        levelBar.setTranslateX(60);
-        levelBar.setTranslateY(75);
+        levelBar.setTranslateX(120);
+        levelBar.setTranslateY(50);
         levelBar.setFill(Color.BLUE);
 
         // ✅ สร้างข้อความ "Attack:"
@@ -76,6 +82,7 @@ public class UIManager {
         FXGL.getGameScene().addUINode(healthBar);
         FXGL.getGameScene().addUINode(healthText);
         FXGL.getGameScene().addUINode(levelText);
+        FXGL.getGameScene().addUINode(levelBarBackground);
         FXGL.getGameScene().addUINode(levelBar);
         FXGL.getGameScene().addUINode(attackText);
 
@@ -85,6 +92,11 @@ public class UIManager {
 
     // ✅ ฟังก์ชันอัปเดต Health Bar
     public void updateHealthDisplay() {
+        Stats stats = FXGL.geto("playerStats");
+        System.out.println("Stats in UIManager: " + stats.hashCode()); // ✅ ตรวจสอบ ID ของ Stats
+        System.out.println("Exp in UIManager before update1: " + stats.getExperience());
+        levelText.setText("Level: " + stats.getLevel());
+
         int health = stats.getHealth();
         int maxHealth = stats.getMaxHealth();  
 
@@ -102,9 +114,8 @@ public class UIManager {
         attackText.setText("Attack: " + stats.getAttack());
 
         // คำนวณความกว้างของ Level Bar
+        System.out.println("Exp in UIManager during update: " + stats.getExperience());
         double levelPercentage = (double) stats.getExperience() / stats.getExperienceForNextLevel();
         levelBar.setWidth(200 * levelPercentage);
     }
-
-    
 }

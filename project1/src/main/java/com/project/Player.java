@@ -12,7 +12,7 @@ import javafx.geometry.Point2D;
 public class Player extends Entity {
     private Entity player;
     private Animation animationComponent;
-    
+    private Stats stats; // เพิ่มตัวแปร Stats
 
     public Player(String image) {
         animationComponent = new Animation(image); // ส่งชื่อไฟล์ไปยัง Animation
@@ -22,16 +22,20 @@ public class Player extends Entity {
         PhysicsComponent physics = new PhysicsComponent();
         physics.setBodyType(BodyType.DYNAMIC);
 
+        stats = new Stats(health, score, attack, level); // สร้าง Stats component
+
         player = FXGL.entityBuilder()
                 .at(944, 416)
                 .type(EntityType.PLAYER)
                 .bbox(new HitBox("Body", BoundingShape.box(50, 50)))
                 .bbox(new HitBox("Body", new Point2D(12, 14), BoundingShape.box(50, 50)))
-                .with(physics, animationComponent, new CollidableComponent(true),new Health(health)) // เพิ่ม AnimationComponent เข้าไป
+                .with(physics, animationComponent, new CollidableComponent(true), new Health(health), stats) // เพิ่ม Stats component เข้าไป
                 .buildAndAttach();
 
         return player;
     }
 
-    
+    public Stats getStats() {
+        return stats;
+    }
 }

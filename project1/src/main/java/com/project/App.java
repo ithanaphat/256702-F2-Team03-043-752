@@ -19,7 +19,10 @@ import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.physics.PhysicsWorld;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
 
+import javafx.geometry.Point2D;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
+import javafx.scene.paint.Color;
 
 public class App extends GameApplication {
     private Stats stats;
@@ -72,34 +75,89 @@ public class App extends GameApplication {
                 onCollisionBegin(EntityType.MONSTER, EntityType.PLAYER, (monster, player) -> {
                     stats.damage(10); // ✅ ลดพลังชีวิตลง 10
                     uiManager.updateHealthDisplay(); // ✅ อัปเดต Health Bar
-                });;
+                   
+                }
+                );
+
+                 
                 
     }
 
     @Override
     protected void initInput() {
-    Attack.init(); // ✅ เรียกใช้ระบบโจมตีเมื่อคลิกซ้าย
+
+        FXGL.getInput().addAction(new UserAction("Attack") {
+            @Override
+            protected void onActionBegin() {
+                // ดึงตำแหน่งของผู้เล่น
+                Entity player = getGameWorld().getSingleton(EntityType.PLAYER);
+                Point2D playerPos = player.getPosition();
+
+                // Trigger attack effect
+                Animation.playAttackEffect(playerPos, Color.RED, Color.ORANGE);
+
+                // หา Monster ที่ใกล้ที่สุด
+                Entity nearestMonster = getGameWorld().getEntitiesByType(EntityType.MONSTER).stream()
+                        .min((m1, m2) -> {
+                            double d1 = m1.getPosition().distance(playerPos);
+                            double d2 = m2.getPosition().distance(playerPos);
+                            return Double.compare(d1, d2);
+                        })
+                        .orElse(null);
+
+                // ถ้าเจอมอนสเตอร์ที่อยู่ในระยะ ให้ลดพลังชีวิต
+                if (nearestMonster != null && playerPos.distance(nearestMonster.getPosition()) < 80) {
+                    Health health = nearestMonster.getComponent(Health.class);
+                    int attackPower = stats.getAttack(); // ดึงค่าพลังโจมตีของผู้เล่น
+                    health.damage(attackPower); // ✅ ลดพลังชีวิตของมอนสเตอร์
+
+                    // ถ้าพลังชีวิตหมด ให้ลบมอนสเตอร์ออกจากเกม
+                    if (health.getHealth() <= 0) {
+                        // Trigger death effect
+                        Animation.playEffect(nearestMonster.getPosition(), Color.BLACK, Color.BLACK);
+
+                        nearestMonster.removeFromWorld();
+
+                        // เพิ่มค่า experience ให้กับผู้เล่น
+                        Stats playerStats = FXGL.geto("playerStats");
+                        System.out.println("Stats in Attack: " + playerStats.hashCode()); // ✅ ตรวจสอบ ID ของ Stats
+                        playerStats.addExperience(10);
+
+                        System.out.println("Exp in Attack after update: " + playerStats.getExperience());
+
+                        // อัปเดต UI
+                        UIManager uiManager = FXGL.geto("uiManager");
+                        uiManager.updateHealthDisplay();
+                    }
+                }
+            }
+        }, MouseButton.PRIMARY); // ✅ ใช้คลิกซ้ายเพื่อโจมตี
+        
     
-    FXGL.getInput().addAction(new UserAction("Skill Q") {
-        @Override
-        protected void onActionBegin() {
-            skillSystem.activateSkill(KeyCode.Q);
-        }
-    }, KeyCode.Q);
+        FXGL.getInput().addAction(new UserAction("Skill Q") {
+            @Override
+            protected void onActionBegin() {
+                skillSystem.activateSkill(KeyCode.Q);
+               // stats.heal(20);
+                uiManager.updateHealthDisplay();
+            }
+        }, KeyCode.Q);
 
-    FXGL.getInput().addAction(new UserAction("Skill E") {
-        @Override
-        protected void onActionBegin() {
-            skillSystem.activateSkill(KeyCode.E);
-        }
-    }, KeyCode.E);
+        FXGL.getInput().addAction(new UserAction("Skill E") {
+            @Override
+            protected void onActionBegin() {
+                skillSystem.activateSkill(KeyCode.E);
 
-    FXGL.getInput().addAction(new UserAction("Skill R") {
-        @Override
-        protected void onActionBegin() {
-            skillSystem.activateSkill(KeyCode.R);
-        }
-    }, KeyCode.R);
+                uiManager.updateHealthDisplay();
+            }
+        }, KeyCode.E);
+
+        FXGL.getInput().addAction(new UserAction("Skill R") {
+            @Override
+            protected void onActionBegin() {
+                skillSystem.activateSkill(KeyCode.R);
+            }
+        }, KeyCode.R);
     }   
 
     @Override
@@ -109,16 +167,18 @@ public class App extends GameApplication {
         PhysicsComponent physics = new PhysicsComponent();
         physics.setBodyType(BodyType.STATIC);
 
-        //รูปภาพผู้เล่น
-        String image = "playerimage.png";
+      
         //ส่งรูปไปในanimation
-        Player player = new Player(image);
-        //สร้างผู้เล่นs
-        player.createPlayer(200, 0, 100, 1 );
+        Player player = new Player("playerimage.png");
+        //สร้างผู้เล่น
+        player.createPlayer(200, 0, 2, 1 );
         //สร้างstats
-        stats = new Stats(200, 0, 100, 1 );
+        stats = player.getStats(); // ดึง Stats จาก Player
+        System.out.println("Stats created in App: " + stats.hashCode()); // ✅ ตรวจสอบ ID ของ Stats
+        FXGL.set("playerStats", stats);
         // สร้าง SkillSystem ที่เชื่อมกับ Player
         skillSystem = new SkillSystem(player); 
+        FXGL.set("skillSystem", skillSystem);
 
         // สร้างมอนสเตอร์
         getGameWorld().addEntityFactory(new MonsterFactory());
@@ -128,7 +188,8 @@ public class App extends GameApplication {
         Entity wall = Wall.createWall(1.33, 596.00,766.67,137.33);
         FXGL.getGameWorld().addEntity(wall);
 
-        uiManager = new UIManager(stats); // สร้าง UIManager ที่เชื่อมกับ Stats
+        uiManager = new UIManager(); // สร้าง UIManager ที่เชื่อมกับ Stats
+        FXGL.set("uiManager", uiManager); // ตั้งค่า uiManager ใน FXGL context
 
         uiManager.initUI(); // เรียกใช้งานการสร้าง UI
     }
