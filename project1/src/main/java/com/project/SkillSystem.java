@@ -1,7 +1,5 @@
 package com.project;
 
-import com.almasb.fxgl.entity.components.IntegerComponent;
-
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.util.Duration;
@@ -48,15 +46,6 @@ public class SkillSystem {
             return;
         }
         
-        if (!player.hasComponent(Stats.class)) {
-            System.out.println("Error: Player does not have Stats component!");
-            return;
-        }
-
-        Stats stats = player.getComponent(Stats.class);
-        int manaCost = getManaCostForSkill(keyCode);
-        stats.setMana(stats.getMana() - manaCost);
-        
         isSkillActive = true; // ✅ ตั้งค่ากำลังใช้สกิล
         switch (keyCode) {
             case Q -> {
@@ -73,25 +62,6 @@ public class SkillSystem {
             }
             default -> System.out.println("No skill assigned to this key.");
         }
-    }
-
-    public void startManaRegeneration() {
-        run(() -> {
-            Stats stats = player.getComponent(Stats.class);
-            if (stats.getMana() < stats.getMaxMana()) {
-                stats.setMana(stats.getMana() + 1); // เพิ่มมานาทีละ 1
-            }
-        }, Duration.seconds(1));
-    }
-
-    // ฟังก์ชันกำหนดค่ามานาสำหรับแต่ละสกิล
-    private int getManaCostForSkill(KeyCode keyCode) {
-        return switch (keyCode) {
-            case Q -> 10;
-            case E -> 15;
-            case R -> 20;
-            default -> 0;
-        };
     }
 
     private void skillOne() {
@@ -128,11 +98,13 @@ public class SkillSystem {
     }
 
     private void modifyPlayerStat(int value) {
-        if (player.hasComponent(IntegerComponent.class)) {
-            IntegerComponent stat = player.getComponent(IntegerComponent.class);
-            stat.setValue(stat.getValue() + value);
+        if (player.hasComponent(Health.class)) {
+            Health health = player.getComponent(Health.class);
+            System.out.println("Before Heal: " + health.getHealth());
+            health.heal(value);
+            System.out.println("After Heal: " + health.getHealth());
         } else {
-            System.out.println("Player has no IntegerComponent!");
+            System.out.println("Player does NOT have Health Component!");
         }
     }    
 }

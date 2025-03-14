@@ -18,7 +18,7 @@ public class Player extends Entity {
         animationComponent = new Animation(image); // ส่งชื่อไฟล์ไปยัง Animation
     }
 
-    public Entity createPlayer(int health, int score, int attack, int level, int mana) {
+    public Entity createPlayer(int health, int score, int attack, int level) {
         PhysicsComponent physics = new PhysicsComponent();
         physics.setBodyType(BodyType.DYNAMIC);
 
@@ -27,7 +27,7 @@ public class Player extends Entity {
                 .type(EntityType.PLAYER)
                 .bbox(new HitBox("Body", BoundingShape.box(50, 50)))
                 .bbox(new HitBox("Body", new Point2D(12, 14), BoundingShape.box(50, 50)))
-                .with(physics, animationComponent, new CollidableComponent(true),new Health(health) ,new Mana(mana)) // เพิ่ม AnimationComponent เข้าไป
+                .with(physics, animationComponent, new CollidableComponent(true),new Health(health)) // เพิ่ม AnimationComponent เข้าไป
                 .buildAndAttach();
 
         return player;

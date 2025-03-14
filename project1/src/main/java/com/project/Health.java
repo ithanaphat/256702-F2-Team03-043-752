@@ -22,5 +22,6 @@ public class Health extends Component {
 
     public void heal(int amount) {
         health += amount;
+        System.out.println("Current Health: " + health);
     }
 }

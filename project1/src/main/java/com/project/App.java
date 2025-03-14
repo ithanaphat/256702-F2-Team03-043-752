@@ -104,19 +104,21 @@ public class App extends GameApplication {
 
     @Override
     protected void initGame() {
-        //รูปภาพผู้เล่น
-        String image = "playerimage.png";
-
-        //ส่งรูปไปในanimation
-        Player player = new Player(image);
-
         //สร้างพื้นหลัง
         FXGL.getGameWorld().addEntity(Background.createBackground());
         PhysicsComponent physics = new PhysicsComponent();
         physics.setBodyType(BodyType.STATIC);
 
+        //รูปภาพผู้เล่น
+        String image = "playerimage.png";
+        //ส่งรูปไปในanimation
+        Player player = new Player(image);
         //สร้างผู้เล่นs
-        player.createPlayer(200, 0, 100, 1 ,100);
+        player.createPlayer(200, 0, 100, 1 );
+        //สร้างstats
+        stats = new Stats(200, 0, 100, 1 );
+        // สร้าง SkillSystem ที่เชื่อมกับ Player
+        skillSystem = new SkillSystem(player); 
 
         // สร้างมอนสเตอร์
         getGameWorld().addEntityFactory(new MonsterFactory());
@@ -126,16 +128,9 @@ public class App extends GameApplication {
         Entity wall = Wall.createWall(1.33, 596.00,766.67,137.33);
         FXGL.getGameWorld().addEntity(wall);
 
-        //สร้างstats
-        stats = new Stats(200, 0, 100, 1 , 100);
-
         uiManager = new UIManager(stats); // สร้าง UIManager ที่เชื่อมกับ Stats
 
         uiManager.initUI(); // เรียกใช้งานการสร้าง UI
-
-        
-
-        skillSystem = new SkillSystem(player); // ✅ สร้าง SkillSystem ที่เชื่อมกับ Player
     }
 
     @Override
