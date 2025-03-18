@@ -172,67 +172,73 @@ public class Animation extends Component {
 
     // ควบคุมตัวละคร
     private boolean up, down, left, right;
+    public static boolean controlsRegistered = false; // ✅ ใช้ Flag ป้องกันซ้ำ
 
-    private void registerControls() {
-
-        FXGL.getInput().clearAll();
-
-        
+    public void registerControls() {
+      
+        if (controlsRegistered) {
+            return; // หยุดทำงานหากเคยลงทะเบียนแล้ว
+        }
+    
+        FXGL.getInput().clearAll(); // ล้าง Key Bindings
+    
         FXGL.getInput().addAction(new UserAction("Move Right") {
             @Override
             protected void onAction() {
                 right = true;
                 updateMovement();
             }
-
+    
             @Override
             protected void onActionEnd() {
                 right = false;
                 updateMovement();
             }
         }, KeyCode.D);
-
+    
         FXGL.getInput().addAction(new UserAction("Move Left") {
             @Override
             protected void onAction() {
                 left = true;
                 updateMovement();
             }
-
+    
             @Override
             protected void onActionEnd() {
                 left = false;
                 updateMovement();
             }
         }, KeyCode.A);
-
+    
         FXGL.getInput().addAction(new UserAction("Move Up") {
             @Override
             protected void onAction() {
                 up = true;
                 updateMovement();
             }
-
+    
             @Override
             protected void onActionEnd() {
                 up = false;
                 updateMovement();
             }
         }, KeyCode.W);
-
+    
         FXGL.getInput().addAction(new UserAction("Move Down") {
             @Override
             protected void onAction() {
                 down = true;
                 updateMovement();
             }
-
+    
             @Override
             protected void onActionEnd() {
                 down = false;
                 updateMovement();
             }
         }, KeyCode.S);
+    
+        controlsRegistered = true; // ตั้งค่าว่าได้ลงทะเบียนแล้ว
     }
 
     private void updateMovement() {

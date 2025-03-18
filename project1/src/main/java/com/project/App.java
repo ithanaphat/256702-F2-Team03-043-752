@@ -29,6 +29,8 @@ public class App extends GameApplication {
     private Stats stats;
     private UIManager uiManager;
     private SkillSystem skillSystem;
+    private Entity player;
+
 
     public static void main(String[] args) {
         launch(args);
@@ -102,7 +104,9 @@ public class App extends GameApplication {
     @Override
     protected void initInput() {
 
-        
+         FXGL.getInput().clearAll();
+
+    
 
         FXGL.getInput().addAction(new UserAction("Attack") {
             @Override
@@ -192,6 +196,7 @@ public class App extends GameApplication {
 
     @Override
     protected void initGame() {
+        FXGL.getInput().clearAll(); // ✅ ล้าง Input ที่มีอยู่ก่อนเริ่มเกมใหม่
 
         // สร้างพื้นหลัง
         FXGL.getGameWorld().addEntity(Background.createBackground());
@@ -201,14 +206,19 @@ public class App extends GameApplication {
         // ส่งรูปไปในanimation
         Player player = new Player("playerimage.png");
         // สร้างผู้เล่น
-        player.createPlayer(200, 0, 2, 1);
+        Entity playerEntity = player.createPlayer(200, 0, 2, 1);
         // สร้างstats
         stats = player.getStats(); // ดึง Stats จาก Player
         System.out.println("Stats created in App: " + stats.hashCode()); // ✅ ตรวจสอบ ID ของ Stats
         FXGL.set("playerStats", stats);
+        FXGL.getInput().clearAll(); // ✅ ล้าง Input ที่มีอยู่ก่อนเริ่มเกมใหม่
         // สร้าง SkillSystem ที่เชื่อมกับ Player
         skillSystem = new SkillSystem(player);
         FXGL.set("skillSystem", skillSystem);
+
+
+     
+    
 
         // สร้างมอนสเตอร์
         getGameWorld().addEntityFactory(new MonsterFactory());
@@ -222,6 +232,9 @@ public class App extends GameApplication {
         FXGL.set("uiManager", uiManager); // ตั้งค่า uiManager ใน FXGL context
 
         uiManager.initUI(); // เรียกใช้งานการสร้าง UI
+
+        playerEntity.getComponent(PhysicsComponent.class).setVelocityX(0);
+playerEntity.getComponent(PhysicsComponent.class).setVelocityY(0);
     }
 
     @Override

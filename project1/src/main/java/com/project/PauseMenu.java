@@ -4,6 +4,7 @@ import com.almasb.fxgl.app.scene.FXGLMenu;
 import com.almasb.fxgl.app.scene.MenuType;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -18,11 +19,11 @@ public class PauseMenu extends FXGLMenu {
         getContentRoot().getChildren().add(bg);
 
         // ปุ่ม Resume (เล่นเกมต่อ)
-        Button btnResume = new Button("Resume");
+        Button btnResume = createStyledButton("Resume");
         btnResume.setOnAction(e -> FXGL.getGameController().gotoPlay());
 
         // ปุ่ม Save Game
-        Button btnSave = new Button("Save Game");
+        Button btnSave = createStyledButton("Save Game");
         btnSave.setOnAction(e -> {
             Entity player = FXGL.getGameWorld().getSingleton(EntityType.PLAYER);
             Stats stats = player.getComponent(Stats.class);
@@ -31,7 +32,7 @@ public class PauseMenu extends FXGLMenu {
         });
 
         // ปุ่ม Load Game
-        Button btnLoad = new Button("Load Game");
+        Button btnLoad = createStyledButton("Load Game");
         btnLoad.setOnAction(e -> {
             SaveData data = SaveLoadManager.loadGame();
             if (data != null) {
@@ -41,19 +42,61 @@ public class PauseMenu extends FXGLMenu {
         });
 
         // ปุ่ม Back to Main Menu (กลับไปหน้าเมนูหลัก)
-        Button btnMainMenu = new Button("Main Menu");
+        Button btnMainMenu = createStyledButton("Main Menu");
         btnMainMenu.setOnAction(e -> FXGL.getGameController().gotoMainMenu());
 
         // ปุ่ม Quit (ออกจากเกม)
-        Button btnQuit = new Button("Quit");
+        Button btnQuit = createStyledButton("Quit");
         btnQuit.setOnAction(e -> FXGL.getGameController().exit());
 
         // จัดเรียงปุ่มในแนวตั้ง
         VBox menuBox = new VBox(15, btnResume, btnSave, btnLoad, btnMainMenu, btnQuit);
-        menuBox.setTranslateX(FXGL.getAppWidth() / 2 - 50);
-        menuBox.setTranslateY(FXGL.getAppHeight() / 2 - 100);
+        menuBox.setAlignment(Pos.CENTER);
+        menuBox.setTranslateX(FXGL.getAppWidth() / 2 - 125);
+        menuBox.setTranslateY(FXGL.getAppHeight() / 2 - 150);
 
         getContentRoot().getChildren().add(menuBox);
+    }
+
+    // ✅ ฟังก์ชันสร้างปุ่มที่มีสไตล์
+    private Button createStyledButton(String text) {
+        Button button = new Button(text);
+        button.setPrefSize(250, 60); // ปรับขนาดปุ่ม
+        button.setStyle(
+            "-fx-font-size: 24px; " +
+            "-fx-font-weight: bold; " +
+            "-fx-background-color: linear-gradient(to right, #00c6ff, #0072ff); " + // สีฟ้าไล่สี
+            "-fx-text-fill: white; " +
+            "-fx-background-radius: 30;" + // ทำให้ปุ่มโค้งมน
+            "-fx-border-color: white; " +
+            "-fx-border-width: 2px; " +
+            "-fx-border-radius: 30;"
+        );
+
+        // ✅ เอฟเฟกต์ Hover (เปลี่ยนสีปุ่มเมื่อเอาเม้าส์ไปชี้)
+        button.setOnMouseEntered(e -> button.setStyle(
+            "-fx-font-size: 24px; " +
+            "-fx-font-weight: bold; " +
+            "-fx-background-color: linear-gradient(to right, #00e6ff, #0088ff); " + // ฟ้าอ่อนขึ้น
+            "-fx-text-fill: white; " +
+            "-fx-background-radius: 30;" +
+            "-fx-border-color: white; " +
+            "-fx-border-width: 2px; " +
+            "-fx-border-radius: 30;"
+        ));
+
+        button.setOnMouseExited(e -> button.setStyle(
+            "-fx-font-size: 24px; " +
+            "-fx-font-weight: bold; " +
+            "-fx-background-color: linear-gradient(to right, #00c6ff, #0072ff); " +
+            "-fx-text-fill: white; " +
+            "-fx-background-radius: 30;" +
+            "-fx-border-color: white; " +
+            "-fx-border-width: 2px; " +
+            "-fx-border-radius: 30;"
+        ));
+
+        return button;
     }
 
     // โหลดข้อมูลจากไฟล์เซฟ
@@ -79,5 +122,4 @@ public class PauseMenu extends FXGLMenu {
 
         FXGL.getNotificationService().pushNotification("Game Loaded!");
     }
-
 }
