@@ -38,4 +38,8 @@ public class Player extends Entity {
     public Stats getStats() {
         return stats;
     }
+
+    
+
+    
 }

@@ -174,6 +174,10 @@ public class Animation extends Component {
     private boolean up, down, left, right;
 
     private void registerControls() {
+
+        FXGL.getInput().clearAll();
+
+        
         FXGL.getInput().addAction(new UserAction("Move Right") {
             @Override
             protected void onAction() {

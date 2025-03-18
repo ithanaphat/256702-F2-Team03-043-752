@@ -11,6 +11,7 @@ import static com.almasb.fxgl.dsl.FXGL.spawn;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.app.scene.FXGLMenu;
+import com.almasb.fxgl.app.scene.SceneFactory;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.input.UserAction;
@@ -32,7 +33,7 @@ public class App extends GameApplication {
     public static void main(String[] args) {
         launch(args);
     }
-    
+
     @Override
     protected void initSettings(GameSettings settings) {
         settings.setWidth(1280);
@@ -40,7 +41,25 @@ public class App extends GameApplication {
         settings.setTitle("The Last Adventurer");
         settings.setVersion("0.1");
 
-        settings.setMainMenuEnabled(true);
+        settings.setMainMenuEnabled(true); // ✅ ต้องเปิดใช้งาน
+
+       
+
+
+        settings.setSceneFactory(new SceneFactory() { 
+            @Override
+            public FXGLMenu newMainMenu() {
+                System.out.println("SceneFactory: Loading StartScreen"); // Debug
+                return new StartScreen();
+            }
+        
+            @Override
+            public FXGLMenu newGameMenu() { // ✅ เพิ่ม Game Menu (Pause Menu)
+                System.out.println("SceneFactory: Loading PauseMenu"); // Debug
+                return new PauseMenu();
+            }
+        });
+        
     }
 
     @Override
@@ -72,19 +91,18 @@ public class App extends GameApplication {
                 .with(new PhysicsComponent())
                 .buildAndAttach();
 
-                onCollisionBegin(EntityType.MONSTER, EntityType.PLAYER, (monster, player) -> {
-                    stats.damage(10); // ✅ ลดพลังชีวิตลง 10
-                    uiManager.updateHealthDisplay(); // ✅ อัปเดต Health Bar
-                   
-                }
-                );
+        onCollisionBegin(EntityType.MONSTER, EntityType.PLAYER, (monster, player) -> {
+            stats.damage(10); // ✅ ลดพลังชีวิตลง 10
+            uiManager.updateHealthDisplay(); // ✅ อัปเดต Health Bar
 
-                 
-                
+        });
+
     }
 
     @Override
     protected void initInput() {
+
+        
 
         FXGL.getInput().addAction(new UserAction("Attack") {
             @Override
@@ -132,13 +150,12 @@ public class App extends GameApplication {
                 }
             }
         }, MouseButton.PRIMARY); // ✅ ใช้คลิกซ้ายเพื่อโจมตี
-        
-    
+
         FXGL.getInput().addAction(new UserAction("Skill Q") {
             @Override
             protected void onActionBegin() {
                 skillSystem.activateSkill(KeyCode.Q);
-               // stats.heal(20);
+                // stats.heal(20);
                 uiManager.updateHealthDisplay();
             }
         }, KeyCode.Q);
@@ -156,36 +173,49 @@ public class App extends GameApplication {
             @Override
             protected void onActionBegin() {
                 skillSystem.activateSkill(KeyCode.R);
+
             }
         }, KeyCode.R);
-    }   
+
+        FXGL.getInput().addAction(new UserAction("Pause") {
+            @Override
+            protected void onActionBegin() {
+                System.out.println("Pause button pressed ✅"); 
+                FXGL.getSceneService().pushSubScene(new PauseMenu());
+                System.out.println("Switched to PauseMenu ✅");
+            }
+        }, KeyCode.ESCAPE);
+        
+        
+
+    }
 
     @Override
     protected void initGame() {
-        //สร้างพื้นหลัง
+
+        // สร้างพื้นหลัง
         FXGL.getGameWorld().addEntity(Background.createBackground());
         PhysicsComponent physics = new PhysicsComponent();
         physics.setBodyType(BodyType.STATIC);
 
-      
-        //ส่งรูปไปในanimation
+        // ส่งรูปไปในanimation
         Player player = new Player("playerimage.png");
-        //สร้างผู้เล่น
-        player.createPlayer(200, 0, 2, 1 );
-        //สร้างstats
+        // สร้างผู้เล่น
+        player.createPlayer(200, 0, 2, 1);
+        // สร้างstats
         stats = player.getStats(); // ดึง Stats จาก Player
         System.out.println("Stats created in App: " + stats.hashCode()); // ✅ ตรวจสอบ ID ของ Stats
         FXGL.set("playerStats", stats);
         // สร้าง SkillSystem ที่เชื่อมกับ Player
-        skillSystem = new SkillSystem(player); 
+        skillSystem = new SkillSystem(player);
         FXGL.set("skillSystem", skillSystem);
 
         // สร้างมอนสเตอร์
         getGameWorld().addEntityFactory(new MonsterFactory());
         spawn("monster", 100, 100);
 
-        //สร้างกำแพง
-        Entity wall = Wall.createWall(1.33, 596.00,766.67,137.33);
+        // สร้างกำแพง
+        Entity wall = Wall.createWall(1.33, 596.00, 766.67, 137.33);
         FXGL.getGameWorld().addEntity(wall);
 
         uiManager = new UIManager(); // สร้าง UIManager ที่เชื่อมกับ Stats
@@ -205,6 +235,10 @@ public class App extends GameApplication {
     }
 
     protected FXGLMenu getMainMenu() {
+        System.out.println("StartScreen is being initialized"); // Debug จุดที่ 1
+
         return new StartScreen();
     }
-}
+
+    
+    }

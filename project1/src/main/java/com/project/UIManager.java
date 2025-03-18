@@ -93,8 +93,7 @@ public class UIManager {
     // ✅ ฟังก์ชันอัปเดต Health Bar
     public void updateHealthDisplay() {
         Stats stats = FXGL.geto("playerStats");
-        System.out.println("Stats in UIManager: " + stats.hashCode()); // ✅ ตรวจสอบ ID ของ Stats
-        System.out.println("Exp in UIManager before update1: " + stats.getExperience());
+       
         levelText.setText("Level: " + stats.getLevel());
 
         int health = stats.getHealth();
@@ -114,7 +113,7 @@ public class UIManager {
         attackText.setText("Attack: " + stats.getAttack());
 
         // คำนวณความกว้างของ Level Bar
-        System.out.println("Exp in UIManager during update: " + stats.getExperience());
+       
         double levelPercentage = (double) stats.getExperience() / stats.getExperienceForNextLevel();
         levelBar.setWidth(200 * levelPercentage);
     }
