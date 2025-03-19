@@ -16,7 +16,6 @@ public class StartScreen extends FXGLMenu {
 
     public StartScreen() {
         super(MenuType.MAIN_MENU);
-        System.out.println("StartScreen Loaded"); // ✅ Debug
 
         // สร้างพื้นหลัง
         ImageView bg = new ImageView(FXGL.image("mapboss.png")); 
@@ -53,7 +52,7 @@ public class StartScreen extends FXGLMenu {
         button.setStyle(
             "-fx-font-size: 24px; " +
             "-fx-font-weight: bold; " +
-            "-fx-background-color: linear-gradient(to right, #160b9e, #74f52f); " + // สีแดง-ม่วงไล่สี
+            "-fx-background-color: linear-gradient(to right, #160b9e,rgb(47, 245, 232)); " + // สีแดง-ม่วงไล่สี
             "-fx-text-fill: white; " +
             "-fx-background-radius: 30;" + // ทำให้ปุ่มโค้ง
             "-fx-border-color: white; " +
@@ -65,7 +64,7 @@ public class StartScreen extends FXGLMenu {
         button.setOnMouseEntered(e -> button.setStyle(
             "-fx-font-size: 24px; " +
             "-fx-font-weight: bold; " +
-            "-fx-background-color: linear-gradient(to right, #160b9e, #74f52f); " + // สีส้ม-แดงไล่สี
+            "-fx-background-color: linear-gradient(to right,rgb(32, 19, 212),rgb(110, 229, 245)); " + // สีส้ม-แดงไล่สี
             "-fx-text-fill: white; " +
             "-fx-background-radius: 30;" +
             "-fx-border-color: white; " +
@@ -76,7 +75,7 @@ public class StartScreen extends FXGLMenu {
         button.setOnMouseExited(e -> button.setStyle(
             "-fx-font-size: 24px; " +
             "-fx-font-weight: bold; " +
-            "-fx-background-color: linear-gradient(to right, #160b9e, #74f52f); " +
+            "-fx-background-color: linear-gradient(to right, #160b9e,rgb(47, 229, 245)); " +
             "-fx-text-fill: white; " +
             "-fx-background-radius: 30;" +
             "-fx-border-color: white; " +

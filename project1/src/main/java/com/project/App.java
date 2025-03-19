@@ -8,10 +8,13 @@ import static com.almasb.fxgl.dsl.FXGL.getPhysicsWorld;
 import static com.almasb.fxgl.dsl.FXGL.onCollisionBegin;
 import static com.almasb.fxgl.dsl.FXGL.spawn;
 
+import javafx.util.Duration;
+
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.app.scene.FXGLMenu;
 import com.almasb.fxgl.app.scene.SceneFactory;
+import com.almasb.fxgl.core.math.FXGLMath;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.input.UserAction;
@@ -31,7 +34,6 @@ public class App extends GameApplication {
     private SkillSystem skillSystem;
     private Entity player;
 
-
     public static void main(String[] args) {
         launch(args);
     }
@@ -45,23 +47,18 @@ public class App extends GameApplication {
 
         settings.setMainMenuEnabled(true); // ✅ ต้องเปิดใช้งาน
 
-       
-
-
-        settings.setSceneFactory(new SceneFactory() { 
+        settings.setSceneFactory(new SceneFactory() {
             @Override
             public FXGLMenu newMainMenu() {
-                System.out.println("SceneFactory: Loading StartScreen"); // Debug
                 return new StartScreen();
             }
-        
+
             @Override
             public FXGLMenu newGameMenu() { // ✅ เพิ่ม Game Menu (Pause Menu)
-                System.out.println("SceneFactory: Loading PauseMenu"); // Debug
                 return new PauseMenu();
             }
         });
-        
+
     }
 
     @Override
@@ -92,21 +89,18 @@ public class App extends GameApplication {
                 .bbox(BoundingShape.box(10, getAppHeight())) // กำแพงด้านขวา
                 .with(new PhysicsComponent())
                 .buildAndAttach();
-
-        onCollisionBegin(EntityType.MONSTER, EntityType.PLAYER, (monster, player) -> {
-            stats.damage(10); // ✅ ลดพลังชีวิตลง 10
-            uiManager.updateHealthDisplay(); // ✅ อัปเดต Health Bar
-
-        });
+                onCollisionBegin(EntityType.MONSTER, EntityType.PLAYER, (monster, player) -> {
+                    stats.damage(20); // ✅ ลดพลังชีวิตลง 20
+                    uiManager.updateHealthDisplay(); // ✅ อัปเดต Health Bar
+        
+                });
 
     }
 
     @Override
     protected void initInput() {
 
-         FXGL.getInput().clearAll();
-
-    
+        FXGL.getInput().clearAll();
 
         FXGL.getInput().addAction(new UserAction("Attack") {
             @Override
@@ -142,10 +136,8 @@ public class App extends GameApplication {
 
                         // เพิ่มค่า experience ให้กับผู้เล่น
                         Stats playerStats = FXGL.geto("playerStats");
-                        System.out.println("Stats in Attack: " + playerStats.hashCode()); // ✅ ตรวจสอบ ID ของ Stats
-                        playerStats.addExperience(10);
+                        playerStats.addExperience(5);
 
-                        System.out.println("Exp in Attack after update: " + playerStats.getExperience());
 
                         // อัปเดต UI
                         UIManager uiManager = FXGL.geto("uiManager");
@@ -159,7 +151,7 @@ public class App extends GameApplication {
             @Override
             protected void onActionBegin() {
                 skillSystem.activateSkill(KeyCode.Q);
-                // stats.heal(20);
+
                 uiManager.updateHealthDisplay();
             }
         }, KeyCode.Q);
@@ -184,13 +176,9 @@ public class App extends GameApplication {
         FXGL.getInput().addAction(new UserAction("Pause") {
             @Override
             protected void onActionBegin() {
-                System.out.println("Pause button pressed ✅"); 
                 FXGL.getSceneService().pushSubScene(new PauseMenu());
-                System.out.println("Switched to PauseMenu ✅");
             }
         }, KeyCode.ESCAPE);
-        
-        
 
     }
 
@@ -209,20 +197,12 @@ public class App extends GameApplication {
         Entity playerEntity = player.createPlayer(200, 0, 2, 1);
         // สร้างstats
         stats = player.getStats(); // ดึง Stats จาก Player
-        System.out.println("Stats created in App: " + stats.hashCode()); // ✅ ตรวจสอบ ID ของ Stats
         FXGL.set("playerStats", stats);
         FXGL.getInput().clearAll(); // ✅ ล้าง Input ที่มีอยู่ก่อนเริ่มเกมใหม่
+
         // สร้าง SkillSystem ที่เชื่อมกับ Player
         skillSystem = new SkillSystem(player);
         FXGL.set("skillSystem", skillSystem);
-
-
-     
-    
-
-        // สร้างมอนสเตอร์
-        getGameWorld().addEntityFactory(new MonsterFactory());
-        spawn("monster", 100, 100);
 
         // สร้างกำแพง
         Entity wall = Wall.createWall(1.33, 596.00, 766.67, 137.33);
@@ -234,7 +214,16 @@ public class App extends GameApplication {
         uiManager.initUI(); // เรียกใช้งานการสร้าง UI
 
         playerEntity.getComponent(PhysicsComponent.class).setVelocityX(0);
-playerEntity.getComponent(PhysicsComponent.class).setVelocityY(0);
+        playerEntity.getComponent(PhysicsComponent.class).setVelocityY(0);
+
+        // Spawn a monster every 5 seconds
+        // สร้างมอนสเตอร์
+        getGameWorld().addEntityFactory(new MonsterFactory());
+        FXGL.getGameTimer().runAtInterval(() -> {
+            double x = FXGLMath.random(0, getAppWidth() - 64); // Random x position
+            double y = FXGLMath.random(0, getAppHeight() - 64); // Random y position
+            spawn("monster", x, y);
+        }, Duration.seconds(2));
     }
 
     @Override
@@ -248,10 +237,8 @@ playerEntity.getComponent(PhysicsComponent.class).setVelocityY(0);
     }
 
     protected FXGLMenu getMainMenu() {
-        System.out.println("StartScreen is being initialized"); // Debug จุดที่ 1
 
         return new StartScreen();
     }
 
-    
-    }
+}

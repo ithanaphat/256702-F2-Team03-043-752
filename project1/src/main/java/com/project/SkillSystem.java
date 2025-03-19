@@ -11,7 +11,9 @@ import java.util.Map;
 public class SkillSystem {
     private final Player player;
     private boolean isSkillActive = false; // ✅ เช็คว่าสกิลกำลังทำงานอยู่หรือไม่
+    private boolean isSkillEActive = false; // ✅ เช็คว่าสกิล E กำลังทำงานอยู่หรือไม่
     private final Map<KeyCode, ImageView> skillIcons = new HashMap<>();
+    private boolean shieldActive = false; // ✅ ตัวแปรเช็คสถานะโล่
 
     public SkillSystem(Player player2) {
         this.player = player2;
@@ -42,7 +44,6 @@ public class SkillSystem {
 
     public void activateSkill(KeyCode keyCode) {
         if (isSkillActive) { // ✅ ถ้ามีสกิลทำงานอยู่ ห้ามใช้สกิลใหม่
-            System.out.println("A skill is already active! Wait for cooldown.");
             return;
         }
         
@@ -72,7 +73,18 @@ public class SkillSystem {
 
     private void skillTwo() {
         System.out.println("หมัดอันทรงพลังงงงง!!!");
-        player.getStats().increaseAttackTemporarily(20, java.time.Duration.ofSeconds(5)); // เพิ่มการ
+        Stats stats = player.getStats();
+        int originalAttack = stats.getAttack();
+        int increasedAttack = (int) (originalAttack * 1.5); // เพิ่มพลังโจมตี 50%
+        stats.setAttack(increasedAttack);
+        isSkillEActive = true; // ✅ ตั้งค่าสถานะสกิล E เป็นทำงาน
+
+        // ตั้งค่าให้พลังโจมตีกลับมาเท่าเดิมหลังจาก 5 วินาที
+        runOnce(() -> {
+            stats.setAttack(originalAttack);
+            isSkillEActive = false; // ✅ ตั้งค่าสถานะสกิล E เป็นไม่ทำงาน
+        }, Duration.seconds(5));
+
         play("skill2_sound.mp3");
     }
 
@@ -81,31 +93,26 @@ public class SkillSystem {
         play("skill3_sound.mp3");
     }
 
+    
+
+    
+
+    public boolean isSkillEActive() {
+        return isSkillEActive; // ✅ เช็คสถานะสกิล E
+    }
+
     private void setSkillCooldown(KeyCode keyCode, Duration duration) {
         ImageView skillIcon = skillIcons.get(keyCode);
         if (skillIcon != null) {
             skillIcon.setOpacity(0.5); // ✅ เปลี่ยนเป็นสีเทา
         }
 
-        System.out.println("Skill " + keyCode + " on cooldown for " + duration.toSeconds() + " seconds.");
 
         runOnce(() -> {
             isSkillActive = false; // ✅ ปลดล็อกให้ใช้สกิลใหม่ได้
             if (skillIcon != null) {
                 skillIcon.setOpacity(1.0); // ✅ คืนค่าไอคอนเป็นปกติ
             }
-            System.out.println("Skill " + keyCode + " is ready to use again!");
         }, duration);
     }
-
-    private void modifyPlayerStat(int value) {
-        if (player.hasComponent(Health.class)) {
-            Health health = player.getComponent(Health.class);
-            System.out.println("Before Heal: " + health.getHealth());
-            health.heal(value);
-            System.out.println("After Heal: " + health.getHealth());
-        } else {
-            System.out.println("Player does NOT have Health Component!");
-        }
-    }    
 }
