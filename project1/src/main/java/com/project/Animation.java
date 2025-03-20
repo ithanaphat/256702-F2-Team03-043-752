@@ -111,6 +111,12 @@ public class Animation extends Component {
             speedY = 0;
             texture.loopAnimationChannel(animIdle);
         }
+
+        if (isDashing) {
+            physics.setVelocityX(dashSpeedX);
+            physics.setVelocityY(dashSpeedY);
+            return; // ข้าม update ปกติ
+        }
     }
 
     public void moveRight() {
@@ -265,5 +271,21 @@ public class Animation extends Component {
         physics.setVelocityX(speedX);
         physics.setVelocityY(speedY);
     }
+
+    private boolean isDashing = false;
+    private double dashSpeedX = 0;
+    private double dashSpeedY = 0;
+
+    public void dash(double dx, double dy) {
+        isDashing = true;
+        dashSpeedX = dx;
+        dashSpeedY = dy;
+        FXGL.getGameTimer().runOnceAfter(() -> isDashing = false, Duration.seconds(0.3));
+    }
+
+    public boolean isUp() { return up; }
+    public boolean isDown() { return down; }
+    public boolean isLeft() { return left; }
+    public boolean isRight() { return right; }
 
 }

@@ -90,12 +90,37 @@ public class SkillSystem {
 
     private void skillThree() {
         System.out.println("The Flash!!!");
+        Animation animation = player.getPlayerEntity().getComponent(Animation.class);
+        if (animation == null) {
+            System.out.println("Animation component not found!");
+            return;
+        }
+    
+        // ดึงทิศจาก input ปัจจุบัน
+        double dirX = 0;
+        double dirY = 0;
+    
+        if (animation.isUp()) dirY -= 1;
+        if (animation.isDown()) dirY += 1;
+        if (animation.isLeft()) dirX -= 1;
+        if (animation.isRight()) dirX += 1;
+    
+        // ❌ ถ้าไม่ได้กดทิศทางใดเลย → ไม่ Dash
+        if (dirX == 0 && dirY == 0) {
+            System.out.println("ข่าไม่ขยับ จะskillไม่ได้นะจ๊ะ");
+            isSkillActive = false; // คืน status skill ทันที เพราะไม่ Dash
+            return;
+        }
+    
+        double length = Math.sqrt(dirX * dirX + dirY * dirY);
+        dirX /= length;
+        dirY /= length;
+    
+        double dashPower = 450;
+        animation.dash(dirX * dashPower, dirY * dashPower);
+    
         play("skill3_sound.mp3");
     }
-
-    
-
-    
 
     public boolean isSkillEActive() {
         return isSkillEActive; // ✅ เช็คสถานะสกิล E

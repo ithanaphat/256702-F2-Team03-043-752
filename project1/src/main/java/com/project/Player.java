@@ -35,6 +35,10 @@ public class Player extends Entity {
         return player;
     }
 
+    public Entity getPlayerEntity() {
+        return player;
+    }
+
     public Stats getStats() {
         return stats;
     }
