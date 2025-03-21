@@ -20,12 +20,15 @@ public class UIManager {
 
     public UIManager() {
         this.stats = FXGL.geto("playerStats");
-        this.skillSystem = FXGL.geto("skillSystem"); // ✅ ดึง SkillSystem จาก FXGL context
+    this.skillSystem = FXGL.geto("skillSystem");
 
-        // เพิ่มการตั้งค่า UIManager ให้ฟังการอัปเดตจาก Stats
-        stats.experienceProperty().addListener((obs, oldVal, newVal) -> {
-            updateHealthDisplay(); // อัปเดต UI ทันทีเมื่อค่าประสบการณ์เปลี่ยน
-        });
+    // ฟังค่าจาก playerStats ถ้าเปลี่ยนจะอัปเดต UI อัตโนมัติ
+    FXGL.getWorldProperties().<Stats>addListener("playerStats", (oldStats, newStats) -> {
+        this.stats = newStats;
+        updateHealthDisplay();
+    });
+
+    stats.experienceProperty().addListener((obs, oldVal, newVal) -> updateHealthDisplay());
     }
 
     public void initUI() {

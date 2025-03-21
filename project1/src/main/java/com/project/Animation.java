@@ -59,7 +59,7 @@ public class Animation extends Component {
     public void onAdded() {
         entity.getTransformComponent().setScaleOrigin(new Point2D(16, 21));
         entity.getViewComponent().addChild(texture);
-        registerControls();
+        
     }
 
     @Override
@@ -177,77 +177,12 @@ public class Animation extends Component {
     /// 
 
     // ควบคุมตัวละคร
-    private boolean up, down, left, right;
+    public boolean up, down, left, right;
     public static boolean controlsRegistered = false; // ✅ ใช้ Flag ป้องกันซ้ำ
 
-    public void registerControls() {
-      
-        if (controlsRegistered) {
-            return; // หยุดทำงานหากเคยลงทะเบียนแล้ว
-        }
     
-        FXGL.getInput().clearAll(); // ล้าง Key Bindings
-    
-        FXGL.getInput().addAction(new UserAction("Move Right") {
-            @Override
-            protected void onAction() {
-                right = true;
-                updateMovement();
-            }
-    
-            @Override
-            protected void onActionEnd() {
-                right = false;
-                updateMovement();
-            }
-        }, KeyCode.D);
-    
-        FXGL.getInput().addAction(new UserAction("Move Left") {
-            @Override
-            protected void onAction() {
-                left = true;
-                updateMovement();
-            }
-    
-            @Override
-            protected void onActionEnd() {
-                left = false;
-                updateMovement();
-            }
-        }, KeyCode.A);
-    
-        FXGL.getInput().addAction(new UserAction("Move Up") {
-            @Override
-            protected void onAction() {
-                up = true;
-                updateMovement();
-            }
-    
-            @Override
-            protected void onActionEnd() {
-                up = false;
-                updateMovement();
-            }
-        }, KeyCode.W);
-    
-        FXGL.getInput().addAction(new UserAction("Move Down") {
-            @Override
-            protected void onAction() {
-                down = true;
-                updateMovement();
-            }
-    
-            @Override
-            protected void onActionEnd() {
-                down = false;
-                updateMovement();
-            }
-        }, KeyCode.S);
-    
-        controlsRegistered = true; // ตั้งค่าว่าได้ลงทะเบียนแล้ว
-    }
 
-    private void updateMovement() {
+    public void updateMovement() {
         int moveSpeed = 150;
 
         speedX = 0;

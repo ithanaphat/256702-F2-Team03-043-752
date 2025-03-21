@@ -102,6 +102,79 @@ public class App extends GameApplication {
 
         FXGL.getInput().clearAll();
 
+        FXGL.getInput().addAction(new UserAction("Move Right") {
+            @Override
+            protected void onAction() {
+                Entity player = getGameWorld().getSingleton(EntityType.PLAYER);
+                Animation anim = player.getComponent(Animation.class);
+                anim.right = true;
+                anim.updateMovement();
+            }
+        
+            @Override
+            protected void onActionEnd() {
+                Entity player = getGameWorld().getSingleton(EntityType.PLAYER);
+                Animation anim = player.getComponent(Animation.class);
+                anim.right = false;
+                anim.updateMovement();
+            }
+        }, KeyCode.D);
+        
+        FXGL.getInput().addAction(new UserAction("Move Left") {
+            @Override
+            protected void onAction() {
+                Entity player = getGameWorld().getSingleton(EntityType.PLAYER);
+                Animation anim = player.getComponent(Animation.class);
+                anim.left = true;
+                anim.updateMovement();
+            }
+        
+            @Override
+            protected void onActionEnd() {
+                Entity player = getGameWorld().getSingleton(EntityType.PLAYER);
+                Animation anim = player.getComponent(Animation.class);
+                anim.left = false;
+                anim.updateMovement();
+            }
+        }, KeyCode.A);
+        
+        FXGL.getInput().addAction(new UserAction("Move Up") {
+            @Override
+            protected void onAction() {
+                Entity player = getGameWorld().getSingleton(EntityType.PLAYER);
+                Animation anim = player.getComponent(Animation.class);
+                anim.up = true;
+                anim.updateMovement();
+            }
+        
+            @Override
+            protected void onActionEnd() {
+                Entity player = getGameWorld().getSingleton(EntityType.PLAYER);
+                Animation anim = player.getComponent(Animation.class);
+                anim.up = false;
+                anim.updateMovement();
+            }
+        }, KeyCode.W);
+        
+        FXGL.getInput().addAction(new UserAction("Move Down") {
+            @Override
+            protected void onAction() {
+                Entity player = getGameWorld().getSingleton(EntityType.PLAYER);
+                Animation anim = player.getComponent(Animation.class);
+                anim.down = true;
+                anim.updateMovement();
+            }
+        
+            @Override
+            protected void onActionEnd() {
+                Entity player = getGameWorld().getSingleton(EntityType.PLAYER);
+                Animation anim = player.getComponent(Animation.class);
+                anim.down = false;
+                anim.updateMovement();
+            }
+        }, KeyCode.S);
+        
+
         FXGL.getInput().addAction(new UserAction("Attack") {
             @Override
             protected void onActionBegin() {

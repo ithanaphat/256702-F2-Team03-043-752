@@ -5,10 +5,16 @@ import com.almasb.fxgl.app.scene.MenuType;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import javafx.geometry.Pos;
+import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+
+import static com.almasb.fxgl.dsl.FXGL.spawn;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class PauseMenu extends FXGLMenu {
     public PauseMenu() {
@@ -27,7 +33,11 @@ public class PauseMenu extends FXGLMenu {
         btnSave.setOnAction(e -> {
             Entity player = FXGL.getGameWorld().getSingleton(EntityType.PLAYER);
             Stats stats = player.getComponent(Stats.class);
-            SaveLoadManager.saveGame(stats, player.getX(), player.getY());
+            List<Point2D> enemyPositions = FXGL.getGameWorld().getEntitiesByType(EntityType.MONSTER)
+                    .stream()
+                    .map(Entity::getPosition)
+                    .collect(Collectors.toList());
+            SaveLoadManager.saveGame(stats, player.getX(), player.getY(), enemyPositions);
             FXGL.getNotificationService().pushNotification("Game Saved!");
         });
 
@@ -99,27 +109,34 @@ public class PauseMenu extends FXGLMenu {
         return button;
     }
 
-    // โหลดข้อมูลจากไฟล์เซฟ
     private void loadPlayerFromSave(SaveData data) {
         if (data == null) {
             FXGL.getNotificationService().pushNotification("No Save Data Found!");
             return;
         }
 
-        // ลบตัวละครเก่าทิ้ง
         FXGL.getGameWorld().getEntitiesByType(EntityType.PLAYER).forEach(Entity::removeFromWorld);
+        FXGL.getGameWorld().getEntitiesByType(EntityType.MONSTER).forEach(Entity::removeFromWorld);
 
-        // สร้างตัวละครใหม่จากข้อมูลเซฟ
         Player player = new Player("playerimage.png");
-        Entity newPlayer = player.createPlayer(data.getHealth(), 0, data.getAttack(), data.getLevel());
+        Entity newPlayer = player.createPlayer(data.getHealth(), data.getAttack(), data.getLevel(), data.getExperience());
 
-        // กำหนดตำแหน่งใหม่
         newPlayer.setPosition(data.getPosX(), data.getPosY());
 
-        // กำหนดค่า Stats ที่โหลดมา
         Stats stats = newPlayer.getComponent(Stats.class);
+        stats.setHealth(data.getHealth());
+        stats.setMaxHealth(data.getMaxHealth());
+        stats.setAttack(data.getAttack());
+        stats.setLevel(data.getLevel());
         stats.setExperience(data.getExperience());
 
+        FXGL.set("playerStats", stats);
+
+        for (Point2D pos : data.getEnemyPositions()) {
+            spawn("monster", pos.getX(), pos.getY());
+        }
+
         FXGL.getNotificationService().pushNotification("Game Loaded!");
+        FXGL.<UIManager>geto("uiManager").updateHealthDisplay();
     }
 }

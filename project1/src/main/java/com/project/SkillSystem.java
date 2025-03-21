@@ -8,6 +8,8 @@ import static com.almasb.fxgl.dsl.FXGL.*;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.almasb.fxgl.dsl.FXGL;
+
 public class SkillSystem {
     private final Player player;
     private boolean isSkillActive = false; // ✅ เช็คว่าสกิลกำลังทำงานอยู่หรือไม่
@@ -67,7 +69,24 @@ public class SkillSystem {
 
     private void skillOne() {
         System.out.println("healเต็มเลือดซะะะ!!!");
-        player.getStats().heal(20); // เพิ่มการฟื้นฟูเลือด
+        Stats stats = player.getStats();
+        int maxHealth = stats.getMaxHealth();
+        int healAmount = (int) (maxHealth * 0.1); // Heal 10% of max health
+
+        // Heal every second for the duration of the cooldown
+        Duration healDuration = Duration.seconds(5);
+        int healTicks = (int) healDuration.toSeconds();
+
+        for (int i = 0; i < healTicks; i++) {
+            runOnce(() -> {
+                stats.heal(healAmount);
+                System.out.println("Healed for " + healAmount + " health.");
+                // Update the UI after healing
+                UIManager uiManager = FXGL.geto("uiManager");
+                uiManager.updateHealthDisplay();
+            }, Duration.seconds(i));
+        }
+
         play("skill1_sound.mp3");
     }
 
