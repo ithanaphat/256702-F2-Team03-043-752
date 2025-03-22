@@ -259,11 +259,12 @@ public class App extends GameApplication {
     protected void initGame() {
         FXGL.getInput().clearAll(); // ✅ ล้าง Input ที่มีอยู่ก่อนเริ่มเกมใหม่
 
+        PhysicsComponent physics = new PhysicsComponent();
+        physics.setBodyType(BodyType.STATIC);
+
         // สร้างพื้นหลัง
         FXGL.getGameWorld().addEntityFactory(new Wall());
         FXGL.setLevelFromMap("maps.tmx");
-        PhysicsComponent physics = new PhysicsComponent();
-        physics.setBodyType(BodyType.STATIC);
 
         // ส่งรูปไปในanimation
         Player player = new Player("playerimage.png");
