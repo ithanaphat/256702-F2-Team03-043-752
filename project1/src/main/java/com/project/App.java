@@ -311,4 +311,9 @@ public class App extends GameApplication {
         return new StartScreen();
     }
 
+    public void reloadStatsAfterLoad() {
+        this.stats = FXGL.geto("playerStats");
+    }
+    
+
 }
