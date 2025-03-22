@@ -170,4 +170,10 @@ public class UIManager {
             updateHealthDisplay();
         }
     }
+
+    public void reloadStats() {
+        this.stats = FXGL.geto("playerStats");
+        updateHealthDisplay();
+    }
+    
 }

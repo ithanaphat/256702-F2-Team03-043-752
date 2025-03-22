@@ -131,6 +131,12 @@ public class PauseMenu extends FXGLMenu {
         stats.setExperience(data.getExperience());
 
         FXGL.set("playerStats", stats);
+        UIManager uiManager = FXGL.geto("uiManager");
+uiManager.reloadStats();
+SkillSystem skillSystem = FXGL.geto("skillSystem");
+skillSystem.setPlayer(player);
+
+
 
         for (Point2D pos : data.getEnemyPositions()) {
             spawn("monster", pos.getX(), pos.getY());
@@ -138,5 +144,8 @@ public class PauseMenu extends FXGLMenu {
 
         FXGL.getNotificationService().pushNotification("Game Loaded!");
         FXGL.<UIManager>geto("uiManager").updateHealthDisplay();
+        ((App) FXGL.getApp()).reloadStatsAfterLoad();
+
     }
+    
 }
