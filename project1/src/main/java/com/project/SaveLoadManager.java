@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SaveLoadManager {
-    private static final String SAVE_FILE = "c:/Users/t1669/OneDrive/เดสก์ท็อป/java practise/Game Project Java/256702-F2-Team03-043-752/savegame.txt";
+    public static final String SAVE_FILE = "c:/Users/t1669/OneDrive/เดสก์ท็อป/java practise/Game Project Java/256702-F2-Team03-043-752/savegame.txt";
 
     public static void saveGame(Stats stats, double posX, double posY, List<Point2D> enemyPositions) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(SAVE_FILE))) {

@@ -75,10 +75,10 @@ public class PauseMenu extends FXGLMenu {
         button.setStyle(
             "-fx-font-size: 24px; " +
             "-fx-font-weight: bold; " +
-            "-fx-background-color: linear-gradient(to right, #00c6ff, #0072ff); " + // สีฟ้าไล่สี
-            "-fx-text-fill: white; " +
+            "-fx-background-color: linear-gradient(to right,#fef4b7,#efc12d); " + // สีฟ้าไล่สี
+            "-fx-text-fill: black; " +
             "-fx-background-radius: 30;" + // ทำให้ปุ่มโค้งมน
-            "-fx-border-color: white; " +
+            "-fx-border-color: black; " +
             "-fx-border-width: 2px; " +
             "-fx-border-radius: 30;"
         );
@@ -87,7 +87,7 @@ public class PauseMenu extends FXGLMenu {
         button.setOnMouseEntered(e -> button.setStyle(
             "-fx-font-size: 24px; " +
             "-fx-font-weight: bold; " +
-            "-fx-background-color: linear-gradient(to right, #00e6ff, #0088ff); " + // ฟ้าอ่อนขึ้น
+            "-fx-background-color: linear-gradient(to right,#ecd382,#d0a10b); " + // ฟ้าอ่อนขึ้น
             "-fx-text-fill: white; " +
             "-fx-background-radius: 30;" +
             "-fx-border-color: white; " +
@@ -98,10 +98,10 @@ public class PauseMenu extends FXGLMenu {
         button.setOnMouseExited(e -> button.setStyle(
             "-fx-font-size: 24px; " +
             "-fx-font-weight: bold; " +
-            "-fx-background-color: linear-gradient(to right, #00c6ff, #0072ff); " +
-            "-fx-text-fill: white; " +
+            "-fx-background-color: linear-gradient(to right,#fef4b7,#efc12d); " +
+            "-fx-text-fill: black; " +
             "-fx-background-radius: 30;" +
-            "-fx-border-color: white; " +
+            "-fx-border-color: black; " +
             "-fx-border-width: 2px; " +
             "-fx-border-radius: 30;"
         ));
