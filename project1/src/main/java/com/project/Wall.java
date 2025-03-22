@@ -2,28 +2,22 @@ package com.project;
 
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
-import com.almasb.fxgl.entity.components.CollidableComponent;
+import com.almasb.fxgl.entity.EntityFactory;
+import com.almasb.fxgl.entity.SpawnData;
+import com.almasb.fxgl.entity.Spawns;
 import com.almasb.fxgl.physics.BoundingShape;
 import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.physics.PhysicsComponent;
-import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
-import javafx.geometry.Point2D;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 
-public class Wall {
+public class Wall implements EntityFactory {
 
-    public static Entity createWall(double x, double y,double width , double height) {
-        PhysicsComponent physics = new PhysicsComponent();
-        physics.setBodyType(BodyType.STATIC);
+    // @Spawns("Wall")
+    // public Entity spawnWall(SpawnData data) {
+    //     return FXGL.entityBuilder(data)
+    //             .type(EntityType.WALL)
+    //             .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
+    //             .with(new PhysicsComponent())
+    //             .build();
+    // }
 
-        return FXGL.entityBuilder()
-                .at(x, y)
-                .type(EntityType.WALL)
-                .bbox(new HitBox(BoundingShape.box(width, height)))
-                .bbox(new HitBox("WallBox", new Point2D(0, 0), BoundingShape.box(width, height)))
-                .viewWithBBox(new Rectangle(width, height , Color.TRANSPARENT))
-                .with(physics, new CollidableComponent(true))
-                .build();
-    }
 }

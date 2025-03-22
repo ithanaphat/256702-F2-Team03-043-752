@@ -260,7 +260,8 @@ public class App extends GameApplication {
         FXGL.getInput().clearAll(); // ✅ ล้าง Input ที่มีอยู่ก่อนเริ่มเกมใหม่
 
         // สร้างพื้นหลัง
-        FXGL.getGameWorld().addEntity(Background.createBackground());
+        FXGL.getGameWorld().addEntityFactory(new Wall());
+        FXGL.setLevelFromMap("maps.tmx");
         PhysicsComponent physics = new PhysicsComponent();
         physics.setBodyType(BodyType.STATIC);
 
@@ -276,10 +277,6 @@ public class App extends GameApplication {
         // สร้าง SkillSystem ที่เชื่อมกับ Player
         skillSystem = new SkillSystem(player);
         FXGL.set("skillSystem", skillSystem);
-
-        // สร้างกำแพง
-        Entity wall = Wall.createWall(1.33, 596.00, 766.67, 137.33);
-        FXGL.getGameWorld().addEntity(wall);
 
         uiManager = new UIManager(); // สร้าง UIManager ที่เชื่อมกับ Stats
         FXGL.set("uiManager", uiManager); // ตั้งค่า uiManager ใน FXGL context
