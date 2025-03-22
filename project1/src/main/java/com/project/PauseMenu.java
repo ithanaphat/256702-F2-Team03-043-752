@@ -133,6 +133,9 @@ public class PauseMenu extends FXGLMenu {
         FXGL.set("playerStats", stats);
         UIManager uiManager = FXGL.geto("uiManager");
 uiManager.reloadStats();
+SkillSystem skillSystem = FXGL.geto("skillSystem");
+skillSystem.setPlayer(player);
+
 
 
         for (Point2D pos : data.getEnemyPositions()) {

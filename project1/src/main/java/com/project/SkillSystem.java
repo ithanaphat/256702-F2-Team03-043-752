@@ -11,7 +11,7 @@ import java.util.Map;
 import com.almasb.fxgl.dsl.FXGL;
 
 public class SkillSystem {
-    private final Player player;
+    private  Player player;
     private boolean isSkillActive = false; // ✅ เช็คว่าสกิลกำลังทำงานอยู่หรือไม่
     private boolean isSkillEActive = false; // ✅ เช็คว่าสกิล E กำลังทำงานอยู่หรือไม่
     private final Map<KeyCode, ImageView> skillIcons = new HashMap<>();
@@ -159,4 +159,9 @@ public class SkillSystem {
             }
         }, duration);
     }
+
+    public void setPlayer(Player newPlayer) {
+        this.player = newPlayer;
+    }
+    
 }
