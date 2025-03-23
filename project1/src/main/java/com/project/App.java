@@ -295,6 +295,12 @@ public class App extends GameApplication {
             double y = FXGLMath.random(0, getAppHeight() - 64); // Random y position
             spawn("monster", x, y);
         }, Duration.seconds(2));
+
+
+      
+         // Play background soundtrack
+         FXGL.getSettings().setGlobalMusicVolume(0.5); // Set volume to 50%
+    FXGL.getAudioPlayer().loopMusic(FXGL.getAssetLoader().loadMusic("background_music.mp3"));
     }
 
     @Override

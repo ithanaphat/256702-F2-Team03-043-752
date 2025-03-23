@@ -86,7 +86,8 @@ public class SkillSystem {
             }, Duration.seconds(i));
         }
 
-        play("skill1_sound.mp3");
+        FXGL.getAudioPlayer().playSound(FXGL.getAssetLoader().loadSound("skill1.mp3"));
+
     }
 
     private void skillTwo() {
@@ -96,14 +97,15 @@ public class SkillSystem {
         int increasedAttack = (int) (originalAttack * 1.5); // เพิ่มพลังโจมตี 50%
         stats.setAttack(increasedAttack);
         isSkillEActive = true; // ✅ ตั้งค่าสถานะสกิล E เป็นทำงาน
-
+    
         // ตั้งค่าให้พลังโจมตีกลับมาเท่าเดิมหลังจาก 5 วินาที
         runOnce(() -> {
             stats.setAttack(originalAttack);
             isSkillEActive = false; // ✅ ตั้งค่าสถานะสกิล E เป็นไม่ทำงาน
         }, Duration.seconds(5));
+    
+        FXGL.getAudioPlayer().playSound(FXGL.getAssetLoader().loadSound("skill2.mp3"));
 
-        play("skill2_sound.mp3");
     }
 
     private void skillThree() {
@@ -141,8 +143,8 @@ public class SkillSystem {
         double dashPower = 450;
         animation.dash(dirX * dashPower, dirY * dashPower);
 
-        play("skill3_sound.mp3");
-    }
+        FXGL.getAudioPlayer().playSound(FXGL.getAssetLoader().loadSound("skill3.mp3"));
+   }
 
     public boolean isSkillEActive() {
         return isSkillEActive; // ✅ เช็คสถานะสกิล E

@@ -78,36 +78,36 @@ public class MonsterFactory implements EntityFactory {
     }
 
     private int calculateMonsterHealth(int playerLevel) {
-        if (playerLevel >= 3)
+        if (playerLevel >= 20)
             return 80;
-        else if (playerLevel >= 2)
+        else if (playerLevel >= 10)
             return 50;
         else
             return 20;
     }
 
     private int calculateMonsterExp(int playerLevel) {
-        if (playerLevel >= 3)
+        if (playerLevel >= 20)
             return 20;
-        else if (playerLevel >= 2)
+        else if (playerLevel >= 10)
             return 10;
         else
             return 5;
     }
 
     private int calculateMonsterDamage(int playerLevel) {
-        if (playerLevel >= 3)
+        if (playerLevel >= 20)
             return 30;
-        else if (playerLevel >= 2)
+        else if (playerLevel >= 10)
             return 20;
         else
             return 10;
     }
 
     private String getMonsterImageByLevel(int playerLevel) {
-        if (playerLevel >= 3)
+        if (playerLevel >= 20)
             return "en3.png";
-        else if (playerLevel >= 2)
+        else if (playerLevel >= 10)
             return "en2.png";
         else
             return "en1.png";
