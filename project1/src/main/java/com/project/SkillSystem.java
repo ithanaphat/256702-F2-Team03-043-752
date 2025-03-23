@@ -11,11 +11,10 @@ import java.util.Map;
 import com.almasb.fxgl.dsl.FXGL;
 
 public class SkillSystem {
-    private  Player player;
+    private Player player;
     private boolean isSkillActive = false; // ✅ เช็คว่าสกิลกำลังทำงานอยู่หรือไม่
     private boolean isSkillEActive = false; // ✅ เช็คว่าสกิล E กำลังทำงานอยู่หรือไม่
     private final Map<KeyCode, ImageView> skillIcons = new HashMap<>();
-    private boolean shieldActive = false; // ✅ ตัวแปรเช็คสถานะโล่
 
     public SkillSystem(Player player2) {
         this.player = player2;
@@ -48,19 +47,19 @@ public class SkillSystem {
         if (isSkillActive) { // ✅ ถ้ามีสกิลทำงานอยู่ ห้ามใช้สกิลใหม่
             return;
         }
-        
+
         isSkillActive = true; // ✅ ตั้งค่ากำลังใช้สกิล
         switch (keyCode) {
             case Q -> {
                 skillOne();
                 setSkillCooldown(keyCode, Duration.seconds(5));
             }
-            case E -> { 
+            case E -> {
                 skillTwo();
                 setSkillCooldown(keyCode, Duration.seconds(6));
             }
             case R -> {
-                skillThree(); 
+                skillThree();
                 setSkillCooldown(keyCode, Duration.seconds(7));
             }
             default -> System.out.println("No skill assigned to this key.");
@@ -114,30 +113,34 @@ public class SkillSystem {
             System.out.println("Animation component not found!");
             return;
         }
-    
+
         // ดึงทิศจาก input ปัจจุบัน
         double dirX = 0;
         double dirY = 0;
-    
-        if (animation.isUp()) dirY -= 1;
-        if (animation.isDown()) dirY += 1;
-        if (animation.isLeft()) dirX -= 1;
-        if (animation.isRight()) dirX += 1;
-    
+
+        if (animation.isUp())
+            dirY -= 1;
+        if (animation.isDown())
+            dirY += 1;
+        if (animation.isLeft())
+            dirX -= 1;
+        if (animation.isRight())
+            dirX += 1;
+
         // ❌ ถ้าไม่ได้กดทิศทางใดเลย → ไม่ Dash
         if (dirX == 0 && dirY == 0) {
             System.out.println("ข่าไม่ขยับ จะskillไม่ได้นะจ๊ะ");
             isSkillActive = false; // คืน status skill ทันที เพราะไม่ Dash
             return;
         }
-    
+
         double length = Math.sqrt(dirX * dirX + dirY * dirY);
         dirX /= length;
         dirY /= length;
-    
+
         double dashPower = 450;
         animation.dash(dirX * dashPower, dirY * dashPower);
-    
+
         play("skill3_sound.mp3");
     }
 
@@ -151,7 +154,6 @@ public class SkillSystem {
             skillIcon.setOpacity(0.5); // ✅ เปลี่ยนเป็นสีเทา
         }
 
-
         runOnce(() -> {
             isSkillActive = false; // ✅ ปลดล็อกให้ใช้สกิลใหม่ได้
             if (skillIcon != null) {
@@ -163,5 +165,5 @@ public class SkillSystem {
     public void setPlayer(Player newPlayer) {
         this.player = newPlayer;
     }
-    
+
 }

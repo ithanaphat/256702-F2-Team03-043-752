@@ -20,15 +20,15 @@ public class UIManager {
 
     public UIManager() {
         this.stats = FXGL.geto("playerStats");
-    this.skillSystem = FXGL.geto("skillSystem");
+        this.skillSystem = FXGL.geto("skillSystem");
 
-    // ฟังค่าจาก playerStats ถ้าเปลี่ยนจะอัปเดต UI อัตโนมัติ
-    FXGL.getWorldProperties().<Stats>addListener("playerStats", (oldStats, newStats) -> {
-        this.stats = newStats;
-        updateHealthDisplay();
-    });
+        // ฟังค่าจาก playerStats ถ้าเปลี่ยนจะอัปเดต UI อัตโนมัติ
+        FXGL.getWorldProperties().<Stats>addListener("playerStats", (oldStats, newStats) -> {
+            this.stats = newStats;
+            updateHealthDisplay();
+        });
 
-    stats.experienceProperty().addListener((obs, oldVal, newVal) -> updateHealthDisplay());
+        stats.experienceProperty().addListener((obs, oldVal, newVal) -> updateHealthDisplay());
     }
 
     public void initUI() {
@@ -123,11 +123,11 @@ public class UIManager {
     // ✅ ฟังก์ชันอัปเดต Health Bar
     public void updateHealthDisplay() {
         Stats stats = FXGL.geto("playerStats");
-       
+
         levelText.setText("Level: " + stats.getLevel());
 
         int health = stats.getHealth();
-        int maxHealth = stats.getMaxHealth();  
+        int maxHealth = stats.getMaxHealth();
 
         // คำนวณความกว้างของ Health Bar
         double healthPercentage = (double) health / maxHealth;
@@ -175,5 +175,5 @@ public class UIManager {
         this.stats = FXGL.geto("playerStats");
         updateHealthDisplay();
     }
-    
+
 }

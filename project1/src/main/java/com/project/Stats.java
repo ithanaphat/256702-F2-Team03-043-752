@@ -49,6 +49,7 @@ public class Stats extends Component {
     public void setLevel(int level) {
         this.level.set(level);
     }
+
     // Getter และ Setter สำหรับ attack (พลังโจมตี)
     public IntegerProperty attackProperty() {
         return attack;
@@ -65,14 +66,13 @@ public class Stats extends Component {
     public void increaseAttackTemporarily(int value, Duration duration) {
         int originalAttack = getAttack();
         setAttack(originalAttack + value);
-       
-    
+
         FXGL.runOnce(() -> {
             setAttack(originalAttack);
-          
+
         }, javafx.util.Duration.millis(duration.toMillis()));
     }
-    
+
     public int getHealth() {
         return health.get();
     }
@@ -106,9 +106,9 @@ public class Stats extends Component {
     }
 
     public void setExperience(int experience) {
-       
+
         this.experience.set(experience);
-       
+
     }
 
     public IntegerProperty experienceProperty() {
@@ -129,7 +129,7 @@ public class Stats extends Component {
 
     public void addExperience(int amount) {
         experience.set(experience.get() + amount);
-   
+
         while (experience.get() >= getExperienceForNextLevel()) {
             experience.set(experience.get() - getExperienceForNextLevel());
             level.set(level.get() + 1);

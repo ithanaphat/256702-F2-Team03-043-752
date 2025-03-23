@@ -29,7 +29,10 @@ public class Player extends Entity {
                 .type(EntityType.PLAYER)
                 .bbox(new HitBox("Body", BoundingShape.box(50, 50)))
                 .bbox(new HitBox("Body", new Point2D(12, 14), BoundingShape.box(50, 50)))
-                .with(physics, animationComponent, new CollidableComponent(true), new Health(health), stats) // เพิ่ม Stats component เข้าไป
+                .with(physics, animationComponent, new CollidableComponent(true), new Health(health), stats) // เพิ่ม
+                                                                                                             // Stats
+                                                                                                             // component
+                                                                                                             // เข้าไป
                 .buildAndAttach();
 
         return player;
@@ -43,7 +46,4 @@ public class Player extends Entity {
         return stats;
     }
 
-    
-
-    
 }

@@ -32,7 +32,6 @@ public class App extends GameApplication {
     private Stats stats;
     private UIManager uiManager;
     private SkillSystem skillSystem;
-    private Entity player;
 
     public static void main(String[] args) {
         launch(args);
@@ -89,11 +88,13 @@ public class App extends GameApplication {
                 .bbox(BoundingShape.box(10, getAppHeight())) // กำแพงด้านขวา
                 .with(new PhysicsComponent())
                 .buildAndAttach();
-                onCollisionBegin(EntityType.MONSTER, EntityType.PLAYER, (monster, player) -> {
-                    stats.damage(20); // ✅ ลดพลังชีวิตลง 20
-                    uiManager.updateHealthDisplay(); // ✅ อัปเดต Health Bar
-        
-                });
+        onCollisionBegin(EntityType.MONSTER, EntityType.PLAYER, (monster, player) -> {
+            int monsterDamage = monster.getInt("damage");
+            stats.damage(monsterDamage);
+
+            uiManager.updateHealthDisplay(); // ✅ อัปเดต Health Bar
+
+        });
 
     }
 
@@ -110,7 +111,7 @@ public class App extends GameApplication {
                 anim.right = true;
                 anim.updateMovement();
             }
-        
+
             @Override
             protected void onActionEnd() {
                 Entity player = getGameWorld().getSingleton(EntityType.PLAYER);
@@ -119,7 +120,7 @@ public class App extends GameApplication {
                 anim.updateMovement();
             }
         }, KeyCode.D);
-        
+
         FXGL.getInput().addAction(new UserAction("Move Left") {
             @Override
             protected void onAction() {
@@ -128,7 +129,7 @@ public class App extends GameApplication {
                 anim.left = true;
                 anim.updateMovement();
             }
-        
+
             @Override
             protected void onActionEnd() {
                 Entity player = getGameWorld().getSingleton(EntityType.PLAYER);
@@ -137,7 +138,7 @@ public class App extends GameApplication {
                 anim.updateMovement();
             }
         }, KeyCode.A);
-        
+
         FXGL.getInput().addAction(new UserAction("Move Up") {
             @Override
             protected void onAction() {
@@ -146,7 +147,7 @@ public class App extends GameApplication {
                 anim.up = true;
                 anim.updateMovement();
             }
-        
+
             @Override
             protected void onActionEnd() {
                 Entity player = getGameWorld().getSingleton(EntityType.PLAYER);
@@ -155,7 +156,7 @@ public class App extends GameApplication {
                 anim.updateMovement();
             }
         }, KeyCode.W);
-        
+
         FXGL.getInput().addAction(new UserAction("Move Down") {
             @Override
             protected void onAction() {
@@ -164,7 +165,7 @@ public class App extends GameApplication {
                 anim.down = true;
                 anim.updateMovement();
             }
-        
+
             @Override
             protected void onActionEnd() {
                 Entity player = getGameWorld().getSingleton(EntityType.PLAYER);
@@ -173,7 +174,6 @@ public class App extends GameApplication {
                 anim.updateMovement();
             }
         }, KeyCode.S);
-        
 
         FXGL.getInput().addAction(new UserAction("Attack") {
             @Override
@@ -209,8 +209,8 @@ public class App extends GameApplication {
 
                         // เพิ่มค่า experience ให้กับผู้เล่น
                         Stats playerStats = FXGL.geto("playerStats");
-                        playerStats.addExperience(5);
-
+                        int expReward = nearestMonster.getInt("expReward");
+                        playerStats.addExperience(expReward);
 
                         // อัปเดต UI
                         UIManager uiManager = FXGL.geto("uiManager");
@@ -303,14 +303,14 @@ public class App extends GameApplication {
     }
 
     @Override
-protected void onUpdate(double tpf) {
-    super.onUpdate(tpf);
+    protected void onUpdate(double tpf) {
+        super.onUpdate(tpf);
 
-    // Check if player's health is 0 or less
-    if (stats.getHealth() <= 0) {
-        FXGL.getSceneService().pushSubScene(new DeathScreen());
+        // Check if player's health is 0 or less
+        if (stats.getHealth() <= 0) {
+            FXGL.getSceneService().pushSubScene(new DeathScreen());
+        }
     }
-}
 
     protected FXGLMenu getMainMenu() {
 
@@ -320,6 +320,5 @@ protected void onUpdate(double tpf) {
     public void reloadStatsAfterLoad() {
         this.stats = FXGL.geto("playerStats");
     }
-    
 
 }

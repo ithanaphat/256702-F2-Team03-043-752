@@ -1,13 +1,13 @@
 package com.project;
 
 import com.almasb.fxgl.dsl.FXGL;
-import com.almasb.fxgl.input.UserAction;
+
 import com.almasb.fxgl.particle.ParticleComponent;
 import com.almasb.fxgl.particle.ParticleEmitter;
 import com.almasb.fxgl.particle.ParticleEmitters;
 
 import javafx.scene.effect.BlendMode;
-import javafx.scene.input.KeyCode;
+
 import javafx.scene.paint.Color;
 
 import com.almasb.fxgl.physics.PhysicsComponent;
@@ -19,14 +19,11 @@ import com.almasb.fxgl.texture.AnimationChannel;
 import javafx.geometry.Point2D;
 import javafx.util.Duration;
 
-
 public class Animation extends Component {
-    
+
     private PhysicsComponent physics;
     private int speedX = 0;
     private int speedY = 0;
-
-    private AnimationChannel animAttack;
 
     private AnimatedTexture texture;
     private AnimationChannel animIdle, animWalkRight, animWalkLeft, animWalkUp, animWalkDown;
@@ -44,22 +41,16 @@ public class Animation extends Component {
         animWalkDownRight = animWalkDown;
         animWalkDownLeft = animWalkDown;
 
-        //animation attack 
-        animAttack = new AnimationChannel(FXGL.image("sword.png"), 4, 64, 64, Duration.seconds(0.5), 0, 3);
-      
-
         texture = new AnimatedTexture(animIdle);
         physics = new PhysicsComponent();
         physics.setBodyType(BodyType.DYNAMIC);
     }
 
- 
-
     @Override
     public void onAdded() {
         entity.getTransformComponent().setScaleOrigin(new Point2D(16, 21));
         entity.getViewComponent().addChild(texture);
-        
+
     }
 
     @Override
@@ -137,10 +128,8 @@ public class Animation extends Component {
         speedY = 150;
     }
 
-  
-    
-    //attack animation////////////////////////////////////////////////////////
-    public static void playEffect(Point2D position,Color startColor, Color endColor ) {
+    // attack animation////////////////////////////////////////////////////////
+    public static void playEffect(Point2D position, Color startColor, Color endColor) {
         ParticleEmitter emitter = ParticleEmitters.newExplosionEmitter(100);
         emitter.setStartColor(startColor);
         emitter.setEndColor(endColor);
@@ -155,32 +144,31 @@ public class Animation extends Component {
         FXGL.getGameTimer().runOnceAfter(effect::removeFromWorld, Duration.seconds(0.5));
     }
 
-    public static void playAttackEffect(Point2D position,Color startColor, Color endColor) {
+    public static void playAttackEffect(Point2D position, Color startColor, Color endColor) {
         ParticleEmitter emitter = ParticleEmitters.newSparkEmitter();
-    emitter.setStartColor(startColor);
-    emitter.setEndColor(endColor);
-    emitter.setSize(5, 10);
-    emitter.setBlendMode(BlendMode.ADD);
-    emitter.setNumParticles(30);
-    emitter.setEmissionRate(0.05);
-    emitter.setVelocityFunction(i -> new Point2D(Math.random() * 2 - 1, Math.random() * 2 - 1).normalize().multiply(200));
-    emitter.setExpireFunction(i -> Duration.seconds(0.3));
+        emitter.setStartColor(startColor);
+        emitter.setEndColor(endColor);
+        emitter.setSize(5, 10);
+        emitter.setBlendMode(BlendMode.ADD);
+        emitter.setNumParticles(30);
+        emitter.setEmissionRate(0.05);
+        emitter.setVelocityFunction(
+                i -> new Point2D(Math.random() * 2 - 1, Math.random() * 2 - 1).normalize().multiply(200));
+        emitter.setExpireFunction(i -> Duration.seconds(0.3));
 
-    Entity effect = FXGL.entityBuilder()
-            .at(position.add(40, 0)) // ปรับตำแหน่งให้เอฟเฟกต์ออกมาข้างหน้า
-            .with(new ParticleComponent(emitter))
-            .buildAndAttach();
+        Entity effect = FXGL.entityBuilder()
+                .at(position.add(40, 0)) // ปรับตำแหน่งให้เอฟเฟกต์ออกมาข้างหน้า
+                .with(new ParticleComponent(emitter))
+                .buildAndAttach();
 
-    FXGL.getGameTimer().runOnceAfter(effect::removeFromWorld, Duration.seconds(0.3));
+        FXGL.getGameTimer().runOnceAfter(effect::removeFromWorld, Duration.seconds(0.3));
     }
     ////////////////////////////////////////////////////////////////////
-    /// 
+    ///
 
     // ควบคุมตัวละคร
     public boolean up, down, left, right;
     public static boolean controlsRegistered = false; // ✅ ใช้ Flag ป้องกันซ้ำ
-
-    
 
     public void updateMovement() {
         int moveSpeed = 150;
@@ -218,9 +206,20 @@ public class Animation extends Component {
         FXGL.getGameTimer().runOnceAfter(() -> isDashing = false, Duration.seconds(0.3));
     }
 
-    public boolean isUp() { return up; }
-    public boolean isDown() { return down; }
-    public boolean isLeft() { return left; }
-    public boolean isRight() { return right; }
+    public boolean isUp() {
+        return up;
+    }
+
+    public boolean isDown() {
+        return down;
+    }
+
+    public boolean isLeft() {
+        return left;
+    }
+
+    public boolean isRight() {
+        return right;
+    }
 
 }

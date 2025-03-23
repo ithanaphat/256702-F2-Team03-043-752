@@ -73,38 +73,35 @@ public class PauseMenu extends FXGLMenu {
         Button button = new Button(text);
         button.setPrefSize(250, 60); // ปรับขนาดปุ่ม
         button.setStyle(
-            "-fx-font-size: 24px; " +
-            "-fx-font-weight: bold; " +
-            "-fx-background-color: linear-gradient(to right,#fef4b7,#efc12d); " + // สีฟ้าไล่สี
-            "-fx-text-fill: black; " +
-            "-fx-background-radius: 30;" + // ทำให้ปุ่มโค้งมน
-            "-fx-border-color: black; " +
-            "-fx-border-width: 2px; " +
-            "-fx-border-radius: 30;"
-        );
+                "-fx-font-size: 24px; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-background-color: linear-gradient(to right,#fef4b7,#efc12d); " + // สีฟ้าไล่สี
+                        "-fx-text-fill: black; " +
+                        "-fx-background-radius: 30;" + // ทำให้ปุ่มโค้งมน
+                        "-fx-border-color: black; " +
+                        "-fx-border-width: 2px; " +
+                        "-fx-border-radius: 30;");
 
         // ✅ เอฟเฟกต์ Hover (เปลี่ยนสีปุ่มเมื่อเอาเม้าส์ไปชี้)
         button.setOnMouseEntered(e -> button.setStyle(
-            "-fx-font-size: 24px; " +
-            "-fx-font-weight: bold; " +
-            "-fx-background-color: linear-gradient(to right,#ecd382,#d0a10b); " + // ฟ้าอ่อนขึ้น
-            "-fx-text-fill: white; " +
-            "-fx-background-radius: 30;" +
-            "-fx-border-color: white; " +
-            "-fx-border-width: 2px; " +
-            "-fx-border-radius: 30;"
-        ));
+                "-fx-font-size: 24px; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-background-color: linear-gradient(to right,#ecd382,#d0a10b); " + // ฟ้าอ่อนขึ้น
+                        "-fx-text-fill: white; " +
+                        "-fx-background-radius: 30;" +
+                        "-fx-border-color: white; " +
+                        "-fx-border-width: 2px; " +
+                        "-fx-border-radius: 30;"));
 
         button.setOnMouseExited(e -> button.setStyle(
-            "-fx-font-size: 24px; " +
-            "-fx-font-weight: bold; " +
-            "-fx-background-color: linear-gradient(to right,#fef4b7,#efc12d); " +
-            "-fx-text-fill: black; " +
-            "-fx-background-radius: 30;" +
-            "-fx-border-color: black; " +
-            "-fx-border-width: 2px; " +
-            "-fx-border-radius: 30;"
-        ));
+                "-fx-font-size: 24px; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-background-color: linear-gradient(to right,#fef4b7,#efc12d); " +
+                        "-fx-text-fill: black; " +
+                        "-fx-background-radius: 30;" +
+                        "-fx-border-color: black; " +
+                        "-fx-border-width: 2px; " +
+                        "-fx-border-radius: 30;"));
 
         return button;
     }
@@ -119,7 +116,8 @@ public class PauseMenu extends FXGLMenu {
         FXGL.getGameWorld().getEntitiesByType(EntityType.MONSTER).forEach(Entity::removeFromWorld);
 
         Player player = new Player("playerimage.png");
-        Entity newPlayer = player.createPlayer(data.getHealth(), data.getAttack(), data.getLevel(), data.getExperience());
+        Entity newPlayer = player.createPlayer(data.getHealth(), data.getAttack(), data.getLevel(),
+                data.getExperience());
 
         newPlayer.setPosition(data.getPosX(), data.getPosY());
 
@@ -132,11 +130,9 @@ public class PauseMenu extends FXGLMenu {
 
         FXGL.set("playerStats", stats);
         UIManager uiManager = FXGL.geto("uiManager");
-uiManager.reloadStats();
-SkillSystem skillSystem = FXGL.geto("skillSystem");
-skillSystem.setPlayer(player);
-
-
+        uiManager.reloadStats();
+        SkillSystem skillSystem = FXGL.geto("skillSystem");
+        skillSystem.setPlayer(player);
 
         for (Point2D pos : data.getEnemyPositions()) {
             spawn("monster", pos.getX(), pos.getY());
@@ -147,5 +143,5 @@ skillSystem.setPlayer(player);
         ((App) FXGL.getApp()).reloadStatsAfterLoad();
 
     }
-    
+
 }

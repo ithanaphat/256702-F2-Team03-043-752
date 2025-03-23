@@ -20,7 +20,7 @@ public class StartScreen extends FXGLMenu {
         super(MenuType.MAIN_MENU);
 
         // สร้างพื้นหลัง
-        ImageView bg = new ImageView(FXGL.image("wallpaper.png")); 
+        ImageView bg = new ImageView(FXGL.image("wallpaper.png"));
         bg.setFitWidth(FXGL.getAppWidth());
         bg.setFitHeight(FXGL.getAppHeight());
 
@@ -36,7 +36,8 @@ public class StartScreen extends FXGLMenu {
         FXGLButton btnLoad = createStyledButton("Load Game");
         if (!new File(SaveLoadManager.SAVE_FILE).exists()) {
             btnLoad.setDisable(true);
-            btnLoad.setStyle("-fx-font-size: 24px; -fx-background-color: gray; -fx-text-fill: white; -fx-background-radius: 30;");
+            btnLoad.setStyle(
+                    "-fx-font-size: 24px; -fx-background-color: gray; -fx-text-fill: white; -fx-background-radius: 30;");
         } else {
             btnLoad.setOnAction(e -> {
                 SaveData data = SaveLoadManager.loadGame();
@@ -44,7 +45,7 @@ public class StartScreen extends FXGLMenu {
                     loadGameFromSave(data);
                 }
             });
-            
+
         }
 
         // ปุ่มออกจากเกม
@@ -52,7 +53,7 @@ public class StartScreen extends FXGLMenu {
         btnExit.setOnAction(e -> fireExit());
 
         // จัดวาง UI
-        VBox menuBox = new VBox(20,  btnStart, btnLoad, btnExit);
+        VBox menuBox = new VBox(20, btnStart, btnLoad, btnExit);
         menuBox.setAlignment(Pos.CENTER);
         menuBox.setTranslateX(500);
         menuBox.setTranslateY(300);
@@ -65,40 +66,38 @@ public class StartScreen extends FXGLMenu {
         FXGLButton button = new FXGLButton(text);
         button.setPrefSize(300, 70);
         button.setStyle(
-            "-fx-font-size: 24px; " +
-            "-fx-font-weight: bold; " +
-            "-fx-background-color: linear-gradient(to right,#fef4b7,#efc12d); " +
-            "-fx-text-fill: black; " +
-            "-fx-background-radius: 30;" +
-            "-fx-border-color: black; " +
-            "-fx-border-width: 2px; " +
-            "-fx-border-radius: 30;"
-        );
+                "-fx-font-size: 24px; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-background-color: linear-gradient(to right,#fef4b7,#efc12d); " +
+                        "-fx-text-fill: black; " +
+                        "-fx-background-radius: 30;" +
+                        "-fx-border-color: black; " +
+                        "-fx-border-width: 2px; " +
+                        "-fx-border-radius: 30;");
 
         // Add hover effect
         button.setOnMouseEntered(e -> button.setStyle(
-            "-fx-font-size: 24px; " +
-            "-fx-font-weight: bold; " +
-            "-fx-background-color: linear-gradient(to right,#ecd382,#d0a10b); " +
-            "-fx-text-fill: white; " +
-            "-fx-background-radius: 30;" +
-            "-fx-border-color: white; " +
-            "-fx-border-width: 2px; " +
-            "-fx-border-radius: 30;"
-        ));
+                "-fx-font-size: 24px; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-background-color: linear-gradient(to right,#ecd382,#d0a10b); " +
+                        "-fx-text-fill: white; " +
+                        "-fx-background-radius: 30;" +
+                        "-fx-border-color: white; " +
+                        "-fx-border-width: 2px; " +
+                        "-fx-border-radius: 30;"));
         button.setOnMouseExited(e -> button.setStyle(
-            "-fx-font-size: 24px; " +
-            "-fx-font-weight: bold; " +
-            "-fx-background-color: linear-gradient(to right,#fef4b7,#efc12d); " +
-            "-fx-text-fill: black; " +
-            "-fx-background-radius: 30;" +
-            "-fx-border-color: black; " +
-            "-fx-border-width: 2px; " +
-            "-fx-border-radius: 30;"
-        ));
+                "-fx-font-size: 24px; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-background-color: linear-gradient(to right,#fef4b7,#efc12d); " +
+                        "-fx-text-fill: black; " +
+                        "-fx-background-radius: 30;" +
+                        "-fx-border-color: black; " +
+                        "-fx-border-width: 2px; " +
+                        "-fx-border-radius: 30;"));
 
         return button;
     }
+
     private void loadGameFromSave(SaveData data) {
         FXGL.getGameController().startNewGame();
 
@@ -107,7 +106,8 @@ public class StartScreen extends FXGLMenu {
             FXGL.getGameWorld().getEntitiesByType(EntityType.PLAYER).forEach(Entity::removeFromWorld);
 
             Player player = new Player("playerimage.png");
-            Entity newPlayer = player.createPlayer(data.getHealth(), data.getAttack(), data.getLevel(), data.getExperience());
+            Entity newPlayer = player.createPlayer(data.getHealth(), data.getAttack(), data.getLevel(),
+                    data.getExperience());
             newPlayer.setPosition(data.getPosX(), data.getPosY());
 
             Stats stats = newPlayer.getComponent(Stats.class);

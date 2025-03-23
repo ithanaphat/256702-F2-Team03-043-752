@@ -15,21 +15,38 @@ import javafx.geometry.Point2D;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
 
+import com.almasb.fxgl.dsl.FXGL;
+
 public class MonsterFactory implements EntityFactory {
     @Spawns("monster")
     public Entity newMonster(SpawnData data) {
         PhysicsComponent physics = new PhysicsComponent();
         physics.setBodyType(BodyType.DYNAMIC);
+       
+
+
+        Stats playerStats = FXGL.geto("playerStats");
         
+        
+        int playerLevel = playerStats.getLevel();
+        String monsterImage = getMonsterImageByLevel(playerLevel);
+
+        int monsterHealth = calculateMonsterHealth(playerLevel);
+        int monsterDamage = calculateMonsterDamage(playerLevel);
+        int monsterExp = calculateMonsterExp(playerLevel);
 
         Entity monster = entityBuilder()
-        .type(EntityType.MONSTER)
-        .at(data.getX(), data.getY())
-        .viewWithBBox("en1.png")
-        .bbox(new HitBox("Body", BoundingShape.box(50, 50)))
-        .bbox(new HitBox("Body", new Point2D(12, 14), BoundingShape.box(50, 50)))
-        .with(new CollidableComponent(true), physics,new Health(20))
-        .build();
+                .type(EntityType.MONSTER)
+                .at(data.getX(), data.getY())
+                .viewWithBBox(monsterImage)
+
+                .bbox(new HitBox("Body", BoundingShape.box(50, 50)))
+                .bbox(new HitBox("Body", new Point2D(12, 14), BoundingShape.box(50, 50)))
+                .with(new CollidableComponent(true), physics, new Health(monsterHealth))
+                .build();
+
+        monster.setProperty("expReward", monsterExp); // ใส่ EXP ที่จะได้รับ
+        monster.setProperty("damage", monsterDamage); // ใส่ค่าดาเมจของมอนสเตอร์
 
         monster.addComponent(new MonsterAI(physics));
         return monster;
@@ -58,6 +75,43 @@ public class MonsterFactory implements EntityFactory {
             }
         }
 
-        
     }
+
+    private int calculateMonsterHealth(int playerLevel) {
+        if (playerLevel >= 3)
+            return 80;
+        else if (playerLevel >= 2)
+            return 50;
+        else
+            return 20;
+    }
+
+    private int calculateMonsterExp(int playerLevel) {
+        if (playerLevel >= 3)
+            return 20;
+        else if (playerLevel >= 2)
+            return 10;
+        else
+            return 5;
+    }
+
+    private int calculateMonsterDamage(int playerLevel) {
+        if (playerLevel >= 3)
+            return 30;
+        else if (playerLevel >= 2)
+            return 20;
+        else
+            return 10;
+    }
+
+    private String getMonsterImageByLevel(int playerLevel) {
+        if (playerLevel >= 3)
+            return "en3.png";
+        else if (playerLevel >= 2)
+            return "en2.png";
+        else
+            return "en1.png";
+    }
+    
+
 }
