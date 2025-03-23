@@ -25,7 +25,7 @@ public class MonsterFactory implements EntityFactory {
         Entity monster = entityBuilder()
         .type(EntityType.MONSTER)
         .at(data.getX(), data.getY())
-        .viewWithBBox("dracomachina.png")
+        .viewWithBBox("en1.png")
         .bbox(new HitBox("Body", BoundingShape.box(50, 50)))
         .bbox(new HitBox("Body", new Point2D(12, 14), BoundingShape.box(50, 50)))
         .with(new CollidableComponent(true), physics,new Health(20))

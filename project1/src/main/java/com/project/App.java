@@ -303,9 +303,14 @@ public class App extends GameApplication {
     }
 
     @Override
-    protected void onUpdate(double tpf) {
-        super.onUpdate(tpf);
+protected void onUpdate(double tpf) {
+    super.onUpdate(tpf);
+
+    // Check if player's health is 0 or less
+    if (stats.getHealth() <= 0) {
+        FXGL.getSceneService().pushSubScene(new DeathScreen());
     }
+}
 
     protected FXGLMenu getMainMenu() {
 
