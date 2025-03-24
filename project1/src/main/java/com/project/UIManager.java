@@ -2,7 +2,12 @@ package com.project;
 
 import com.almasb.fxgl.dsl.FXGL;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
@@ -40,42 +45,49 @@ public class UIManager {
         hpLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
 
         // ✅ สร้างพื้นหลังของ Health Bar
-        Rectangle healthBarBackground = new Rectangle(200, 20);
-        healthBarBackground.setTranslateX(120);
-        healthBarBackground.setTranslateY(15);
+        Rectangle healthBarBackground = new Rectangle(321, 17);
+        healthBarBackground.setTranslateX(34);
+        healthBarBackground.setTranslateY(24);
         healthBarBackground.setFill(Color.GRAY);
 
         // ✅ สร้าง Health Bar สีแดง
-        healthBar = new Rectangle(200, 20);
-        healthBar.setTranslateX(120);
-        healthBar.setTranslateY(15);
+        healthBar = new Rectangle(321, 17);
+        healthBar.setTranslateX(34);
+        healthBar.setTranslateY(24);
         healthBar.setFill(Color.RED);
 
         // ✅ แสดงค่า HP เป็นตัวเลข
         healthText = new Text();
-        healthText.setTranslateX(330);
-        healthText.setTranslateY(30);
+        healthText.setTranslateX(175);
+        healthText.setTranslateY(38);
         healthText.setFill(Color.WHITE);
-        healthText.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
+        healthText.setStyle("-fx-font-size: 15px; -fx-font-weight: bold;");
+
+        LinearGradient gradient = new LinearGradient(
+                0, 0, 1, 0, true, CycleMethod.NO_CYCLE,
+                new Stop(0, Color.GREEN),
+                new Stop(1, Color.YELLOW));
 
         // ✅ สร้างข้อความ "Level:"
         levelText = new Text();
-        levelText.setTranslateX(30);
-        levelText.setTranslateY(60);
+        levelText.setTranslateX(400);
+        levelText.setTranslateY(34);
         levelText.setFill(Color.WHITE);
-        levelText.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
+        levelText.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
 
         // ✅ สร้างพื้นหลังของ Level Bar
-        Rectangle levelBarBackground = new Rectangle(200, 5);
-        levelBarBackground.setTranslateX(120);
-        levelBarBackground.setTranslateY(50);
+        Rectangle levelBarBackground = new Rectangle(600, 8);
+        levelBarBackground.setTranslateX(400);
+        levelBarBackground.setTranslateY(5);
         levelBarBackground.setFill(Color.GRAY);
+        levelBarBackground.setStroke(Color.BLACK); // Set the border color
+        levelBarBackground.setStrokeWidth(3); // Set the border width
 
         // ✅ สร้าง Level Bar สีน้ำเงิน
-        levelBar = new Rectangle(200, 5);
-        levelBar.setTranslateX(120);
-        levelBar.setTranslateY(50);
-        levelBar.setFill(Color.BLUE);
+        levelBar = new Rectangle(600, 8);
+        levelBar.setTranslateX(400);
+        levelBar.setTranslateY(5);
+        levelBar.setFill(gradient);
 
         // ✅ สร้างข้อความ "Attack:"
         attackText = new Text();
@@ -86,31 +98,101 @@ public class UIManager {
 
         // ✅ สร้างข้อความ "Points:"
         pointsText = new Text();
-        pointsText.setTranslateX(30);
-        pointsText.setTranslateY(120);
+        pointsText.setTranslateX(1100);
+        pointsText.setTranslateY(28);
         pointsText.setFill(Color.WHITE);
-        pointsText.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
+        pointsText.setStyle("-fx-font-size: 25px; -fx-font-weight: bold;");
 
         // ✅ สร้างปุ่มอัพเกรด HP
-        btnUpgradeHP = new Button("Upgrade HP");
+        btnUpgradeHP = new Button("HP");
         btnUpgradeHP.setTranslateX(30);
-        btnUpgradeHP.setTranslateY(150);
+        btnUpgradeHP.setTranslateY(100);
+        btnUpgradeHP.setPrefSize(70, 50);
+        btnUpgradeHP.setStyle(
+                "-fx-font-size: 18px; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-background-color: linear-gradient(to right,#fef4b7,#efc12d); " +
+                        "-fx-text-fill: black; " +
+                        "-fx-background-radius: 50%; " +
+                        "-fx-border-color: black; " +
+                        "-fx-border-width: 2px; " +
+                        "-fx-border-radius: 50%;");
+        btnUpgradeHP.setOnMouseEntered(e -> btnUpgradeHP.setStyle(
+                "-fx-font-size: 18px; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-background-color: linear-gradient(to right,#ecd382,#d0a10b); " +
+                        "-fx-text-fill: white; " +
+                        "-fx-background-radius: 50%; " +
+                        "-fx-border-color: white; " +
+                        "-fx-border-width: 2px; " +
+                        "-fx-border-radius: 50%;"));
+        btnUpgradeHP.setOnMouseExited(e -> btnUpgradeHP.setStyle(
+                "-fx-font-size: 18px; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-background-color: linear-gradient(to right,#fef4b7,#efc12d); " +
+                        "-fx-text-fill: black; " +
+                        "-fx-background-radius: 50%; " +
+                        "-fx-border-color: black; " +
+                        "-fx-border-width: 2px; " +
+                        "-fx-border-radius: 50%;"));
         btnUpgradeHP.setOnAction(e -> upgradeHP());
 
         // ✅ สร้างปุ่มอัพเกรด Attack
-        btnUpgradeAttack = new Button("Upgrade Attack");
-        btnUpgradeAttack.setTranslateX(150);
-        btnUpgradeAttack.setTranslateY(150);
+        btnUpgradeAttack = new Button("ATK");
+        btnUpgradeAttack.setTranslateX(30);
+        btnUpgradeAttack.setTranslateY(170);
+        btnUpgradeAttack.setPrefSize(70, 50);
+        btnUpgradeAttack.setStyle(
+                "-fx-font-size: 18px; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-background-color: linear-gradient(to right,#fef4b7,#efc12d); " +
+                        "-fx-text-fill: black; " +
+                        "-fx-background-radius: 50%; " +
+                        "-fx-border-color: black; " +
+                        "-fx-border-width: 2px; " +
+                        "-fx-border-radius: 50%;");
+        btnUpgradeAttack.setOnMouseEntered(e -> btnUpgradeAttack.setStyle(
+                "-fx-font-size: 18px; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-background-color: linear-gradient(to right,#ecd382,#d0a10b); " +
+                        "-fx-text-fill: white; " +
+                        "-fx-background-radius: 50%; " +
+                        "-fx-border-color: white; " +
+                        "-fx-border-width: 2px; " +
+                        "-fx-border-radius: 50%;"));
+        btnUpgradeAttack.setOnMouseExited(e -> btnUpgradeAttack.setStyle(
+                "-fx-font-size: 18px; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-background-color: linear-gradient(to right,#fef4b7,#efc12d); " +
+                        "-fx-text-fill: black; " +
+                        "-fx-background-radius: 50%; " +
+                        "-fx-border-color: black; " +
+                        "-fx-border-width: 2px; " +
+                        "-fx-border-radius: 50%;"));
         btnUpgradeAttack.setOnAction(e -> upgradeAttack());
 
+        ImageView hpFrame = FXGL.texture("test.png");
+        ImageView point = FXGL.texture("point.png");
+
+        hpFrame.setTranslateX(10); // กำหนดตำแหน่ง X ของรูปภาพ
+        hpFrame.setTranslateY(5); // กำหนดตำแหน่ง Y ของรูปภาพ
+
+        point.setTranslateX(1050);
+        point.setTranslateY(5);
+
         // ✅ เพิ่ม UI เข้าไปในเกม
-        FXGL.getGameScene().addUINode(hpLabel);
+        // FXGL.getGameScene().addUINode(hpLabel);
         FXGL.getGameScene().addUINode(healthBarBackground);
         FXGL.getGameScene().addUINode(healthBar);
+        FXGL.getGameScene().addUINode(hpFrame);
         FXGL.getGameScene().addUINode(healthText);
+
+        FXGL.getGameScene().addUINode(point);
+
         FXGL.getGameScene().addUINode(levelText);
         FXGL.getGameScene().addUINode(levelBarBackground);
         FXGL.getGameScene().addUINode(levelBar);
+
         FXGL.getGameScene().addUINode(attackText);
         FXGL.getGameScene().addUINode(pointsText);
         FXGL.getGameScene().addUINode(btnUpgradeHP);
@@ -131,7 +213,7 @@ public class UIManager {
 
         // คำนวณความกว้างของ Health Bar
         double healthPercentage = (double) health / maxHealth;
-        healthBar.setWidth(200 * healthPercentage);
+        healthBar.setWidth(321 * healthPercentage);
 
         // อัปเดตค่า HP ที่แสดงผล
         healthText.setText(health + " / " + maxHealth);
@@ -143,11 +225,11 @@ public class UIManager {
         attackText.setText("Attack: " + stats.getAttack());
 
         // อัปเดตค่า Points ที่แสดงผล
-        pointsText.setText("Points: " + stats.getPoints());
+        pointsText.setText(": " + stats.getPoints());
 
         // คำนวณความกว้างของ Level Bar
         double levelPercentage = (double) stats.getExperience() / stats.getExperienceForNextLevel();
-        levelBar.setWidth(200 * levelPercentage);
+        levelBar.setWidth(600 * levelPercentage);
     }
 
     private void upgradeHP() {

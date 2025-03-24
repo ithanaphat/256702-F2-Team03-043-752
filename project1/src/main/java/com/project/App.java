@@ -299,8 +299,9 @@ public class App extends GameApplication {
 
       
          // Play background soundtrack
-         FXGL.getSettings().setGlobalMusicVolume(0.5); // Set volume to 50%
     FXGL.getAudioPlayer().loopMusic(FXGL.getAssetLoader().loadMusic("background_music.mp3"));
+    FXGL.getSettings().setGlobalMusicVolume(0.5); // Set volume to 50%
+
     }
 
     @Override
