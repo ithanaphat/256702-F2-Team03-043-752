@@ -3,6 +3,7 @@ package com.project;
 import static com.almasb.fxgl.dsl.FXGL.entityBuilder;
 import static com.almasb.fxgl.dsl.FXGL.getAppHeight;
 import static com.almasb.fxgl.dsl.FXGL.getAppWidth;
+import static com.almasb.fxgl.dsl.FXGL.getGameScene;
 import static com.almasb.fxgl.dsl.FXGL.getGameWorld;
 import static com.almasb.fxgl.dsl.FXGL.getPhysicsWorld;
 import static com.almasb.fxgl.dsl.FXGL.onCollisionBegin;
@@ -263,6 +264,7 @@ public class App extends GameApplication {
         physics.setBodyType(BodyType.STATIC);
 
         // สร้างพื้นหลัง
+        FXGL.getGameScene().setBackgroundColor(Color.BLACK);
         FXGL.getGameWorld().addEntityFactory(new Wall());
         FXGL.setLevelFromMap("maps.tmx");
 
@@ -273,6 +275,9 @@ public class App extends GameApplication {
         // สร้างstats
         stats = player.getStats(); // ดึง Stats จาก Player
         FXGL.set("playerStats", stats);
+        // ผูกกล้องกับเอนทิตีของผู้เล่น
+        FXGL.getGameScene().getViewport().bindToEntity(playerEntity, getAppWidth() / 2.0, getAppHeight() / 2.0);
+        FXGL.getGameScene().getViewport().setBounds(-200, -200, 1500, 900); // กำหนดขอบเขตกล้องตามขนาดแผนที่
         FXGL.getInput().clearAll(); // ✅ ล้าง Input ที่มีอยู่ก่อนเริ่มเกมใหม่
 
         // สร้าง SkillSystem ที่เชื่อมกับ Player
