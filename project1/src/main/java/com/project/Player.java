@@ -25,10 +25,10 @@ public class Player extends Entity {
         stats = new Stats(health, score, attack, level); // สร้าง Stats component
 
         player = FXGL.entityBuilder()
-                .at(944, 416)
+                .at(18.00, 598.00)
                 .type(EntityType.PLAYER)
-                .bbox(new HitBox("Body", BoundingShape.box(50, 50)))
-                .bbox(new HitBox("Body", new Point2D(12, 14), BoundingShape.box(50, 50)))
+                .bbox(new HitBox("Body", new Point2D(12, 14), BoundingShape.box(40, 40)))
+                .anchorFromCenter() // ทำให้ BBOX อยู่ตรงกลาง Entity
                 .with(physics, animationComponent, new CollidableComponent(true), new Health(health), stats) // เพิ่ม
                                                                                                              // Stats
                                                                                                              // component

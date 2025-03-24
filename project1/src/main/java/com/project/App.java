@@ -3,19 +3,14 @@ package com.project;
 import static com.almasb.fxgl.dsl.FXGL.entityBuilder;
 import static com.almasb.fxgl.dsl.FXGL.getAppHeight;
 import static com.almasb.fxgl.dsl.FXGL.getAppWidth;
-import static com.almasb.fxgl.dsl.FXGL.getGameScene;
 import static com.almasb.fxgl.dsl.FXGL.getGameWorld;
 import static com.almasb.fxgl.dsl.FXGL.getPhysicsWorld;
 import static com.almasb.fxgl.dsl.FXGL.onCollisionBegin;
-import static com.almasb.fxgl.dsl.FXGL.spawn;
-
-import javafx.util.Duration;
 
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.app.scene.FXGLMenu;
 import com.almasb.fxgl.app.scene.SceneFactory;
-import com.almasb.fxgl.core.math.FXGLMath;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.input.UserAction;
@@ -80,13 +75,13 @@ public class App extends GameApplication {
 
         entityBuilder()
                 .at(-30, -30)
-                .bbox(BoundingShape.box(10, getAppHeight())) // กำแพงด้านซ้าย
+                .bbox(BoundingShape.box(20, getAppHeight())) // กำแพงด้านซ้าย
                 .with(new PhysicsComponent())
                 .buildAndAttach();
 
         entityBuilder()
-                .at(getAppWidth() + 30, 0)
-                .bbox(BoundingShape.box(10, getAppHeight())) // กำแพงด้านขวา
+                .at(getAppWidth() + 10, 0)
+                .bbox(BoundingShape.box(20, getAppHeight())) // กำแพงด้านขวา
                 .with(new PhysicsComponent())
                 .buildAndAttach();
         onCollisionBegin(EntityType.MONSTER, EntityType.PLAYER, (monster, player) -> {
@@ -264,8 +259,8 @@ public class App extends GameApplication {
         physics.setBodyType(BodyType.STATIC);
 
         // สร้างพื้นหลัง
-        FXGL.getGameScene().setBackgroundColor(Color.BLACK);
-        FXGL.getGameWorld().addEntityFactory(new Wall());
+        FXGL.getGameScene().setBackgroundRepeat("water.png");
+        FXGL.getGameWorld().addEntityFactory(new Fatory());
         FXGL.setLevelFromMap("maps.tmx");
 
         // ส่งรูปไปในanimation
@@ -294,12 +289,12 @@ public class App extends GameApplication {
 
         // Spawn a monster every 5 seconds
         // สร้างมอนสเตอร์
-        getGameWorld().addEntityFactory(new MonsterFactory());
-        FXGL.getGameTimer().runAtInterval(() -> {
-            double x = FXGLMath.random(0, getAppWidth() - 64); // Random x position
-            double y = FXGLMath.random(0, getAppHeight() - 64); // Random y position
-            spawn("monster", x, y);
-        }, Duration.seconds(2));
+        // getGameWorld().addEntityFactory(new MonsterFactory());
+        // FXGL.getGameTimer().runAtInterval(() -> {
+        //     double x = FXGLMath.random(0, getAppWidth() - 64); // Random x position
+        //     double y = FXGLMath.random(0, getAppHeight() - 64); // Random y position
+        //     spawn("monster", x, y);
+        // }, Duration.seconds(2));
 
 
       
