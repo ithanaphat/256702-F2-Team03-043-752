@@ -291,12 +291,12 @@ public class App extends GameApplication {
         playerEntity.getComponent(PhysicsComponent.class).setVelocityY(0);
 
         
-        getGameWorld().addEntityFactory(new MonsterFactory());
-        FXGL.getGameTimer().runAtInterval(() -> {
-            double x = FXGLMath.random(0, getAppWidth() - 64); // Random x position
-            double y = FXGLMath.random(0, getAppHeight() - 64); // Random y position
-            spawn("monster", x, y);
-        }, Duration.seconds(2));
+        // getGameWorld().addEntityFactory(new MonsterFactory());
+        // FXGL.getGameTimer().runAtInterval(() -> {
+        //     double x = FXGLMath.random(0, getAppWidth() - 64); // Random x position
+        //     double y = FXGLMath.random(0, getAppHeight() - 64); // Random y position
+        //     spawn("monster", x, y);
+        // }, Duration.seconds(2));
 
 
       
