@@ -182,7 +182,7 @@ public class App extends GameApplication {
                 Point2D playerPos = player.getPosition();
 
                 // Trigger attack effect
-                Animation.playAttackEffect(playerPos, Color.RED, Color.ORANGE);
+                Animation.playAttackEffect(playerPos, Color.DARKBLUE, Color.DARKGREY);
 
                 // หา Monster ที่ใกล้ที่สุด
                 Entity nearestMonster = getGameWorld().getEntitiesByType(EntityType.MONSTER).stream()

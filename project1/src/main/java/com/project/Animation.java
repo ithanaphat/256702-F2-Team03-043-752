@@ -145,6 +145,13 @@ public class Animation extends Component {
     }
 
     public static void playAttackEffect(Point2D position, Color startColor, Color endColor) {
+        // ตรวจสอบว่า skill E ทำงานอยู่หรือไม่
+        if (FXGL.geto("skillSystem") instanceof SkillSystem skillSystem && skillSystem.isSkillEActive()) {
+            // หากสกิล E ทำงานอยู่ ให้ใช้สีที่แตกต่าง
+            startColor = Color.RED;  // หรือเลือกสีที่คุณต้องการ
+            endColor = Color.ORANGE; // หรือเลือกสีที่คุณต้องการ
+        }
+    
         ParticleEmitter emitter = ParticleEmitters.newSparkEmitter();
         emitter.setStartColor(startColor);
         emitter.setEndColor(endColor);
@@ -155,14 +162,15 @@ public class Animation extends Component {
         emitter.setVelocityFunction(
                 i -> new Point2D(Math.random() * 2 - 1, Math.random() * 2 - 1).normalize().multiply(200));
         emitter.setExpireFunction(i -> Duration.seconds(0.3));
-
+    
         Entity effect = FXGL.entityBuilder()
                 .at(position.add(40, 0)) // ปรับตำแหน่งให้เอฟเฟกต์ออกมาข้างหน้า
                 .with(new ParticleComponent(emitter))
                 .buildAndAttach();
-
+    
         FXGL.getGameTimer().runOnceAfter(effect::removeFromWorld, Duration.seconds(0.3));
     }
+    
     ////////////////////////////////////////////////////////////////////
     ///
 

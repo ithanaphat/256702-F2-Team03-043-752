@@ -105,8 +105,8 @@ public class SkillSystem {
         }, Duration.seconds(5));
     
         FXGL.getAudioPlayer().playSound(FXGL.getAssetLoader().loadSound("skill2.mp3"));
-
     }
+    
 
     private void skillThree() {
         System.out.println("The Flash!!!");
