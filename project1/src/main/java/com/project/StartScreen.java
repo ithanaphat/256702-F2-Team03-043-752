@@ -127,6 +127,10 @@ public class StartScreen extends FXGLMenu {
                 FXGL.spawn("monster", pos.getX(), pos.getY());
             }
 
+            // Rebind the camera to the new player entity
+            FXGL.getGameScene().getViewport().bindToEntity(newPlayer, FXGL.getAppWidth() / 2.0, FXGL.getAppHeight() / 2.0);
+            FXGL.getGameScene().getViewport().setBounds(-200, -200, 1500, 900); // Adjust the bounds as needed
+
             FXGL.getNotificationService().pushNotification("Game Loaded!");
             ((App) FXGL.getApp()).reloadStatsAfterLoad();
         }, Duration.seconds(0.5));

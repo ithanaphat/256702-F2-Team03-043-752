@@ -6,6 +6,7 @@ import static com.almasb.fxgl.dsl.FXGL.getAppWidth;
 import static com.almasb.fxgl.dsl.FXGL.getGameWorld;
 import static com.almasb.fxgl.dsl.FXGL.getPhysicsWorld;
 import static com.almasb.fxgl.dsl.FXGL.onCollisionBegin;
+import static com.almasb.fxgl.dsl.FXGL.spawn;
 
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
@@ -18,11 +19,13 @@ import com.almasb.fxgl.physics.BoundingShape;
 import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.physics.PhysicsWorld;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
+import com.almasb.fxgl.core.math.FXGLMath;
 
 import javafx.geometry.Point2D;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
 
 public class App extends GameApplication {
     private Stats stats;
@@ -287,19 +290,18 @@ public class App extends GameApplication {
         playerEntity.getComponent(PhysicsComponent.class).setVelocityX(0);
         playerEntity.getComponent(PhysicsComponent.class).setVelocityY(0);
 
-        // Spawn a monster every 5 seconds
-        // สร้างมอนสเตอร์
-        // getGameWorld().addEntityFactory(new MonsterFactory());
-        // FXGL.getGameTimer().runAtInterval(() -> {
-        //     double x = FXGLMath.random(0, getAppWidth() - 64); // Random x position
-        //     double y = FXGLMath.random(0, getAppHeight() - 64); // Random y position
-        //     spawn("monster", x, y);
-        // }, Duration.seconds(2));
+        
+        getGameWorld().addEntityFactory(new MonsterFactory());
+        FXGL.getGameTimer().runAtInterval(() -> {
+            double x = FXGLMath.random(0, getAppWidth() - 64); // Random x position
+            double y = FXGLMath.random(0, getAppHeight() - 64); // Random y position
+            spawn("monster", x, y);
+        }, Duration.seconds(2));
 
 
       
          // Play background soundtrack
-    FXGL.getAudioPlayer().loopMusic(FXGL.getAssetLoader().loadMusic("background_music.mp3"));
+    FXGL.getAudioPlayer().loopMusic(FXGL.getAssetLoader().loadMusic("background.mp3"));
     FXGL.getSettings().setGlobalMusicVolume(0.5); // Set volume to 50%
 
     }
