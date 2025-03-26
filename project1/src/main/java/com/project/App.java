@@ -19,6 +19,7 @@ import com.almasb.fxgl.physics.BoundingShape;
 import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.physics.PhysicsWorld;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
+import com.project.MonsterFactory.BossAI;
 import com.almasb.fxgl.core.math.FXGLMath;
 
 import javafx.geometry.Point2D;
@@ -96,12 +97,14 @@ public class App extends GameApplication {
         });
 
         onCollisionBegin(EntityType.BOSS, EntityType.PLAYER, (boss, player) -> {
-            int monsterDamage = boss.getInt("damage");
-            stats.damage(monsterDamage);
+        int monsterDamage = boss.getInt("damage");
+        stats.damage(monsterDamage);
 
-            uiManager.updateHealthDisplay(); // ✅ อัปเดต Health Bar
+        uiManager.updateHealthDisplay(); // ✅ อัปเดต Health Bar
 
-        });
+        BossAnimation bossAnimation = boss.getComponent(BossAnimation.class);
+        bossAnimation.stun(2); // Stun the boss for 6 seconds
+    });
 
     }
 
@@ -284,6 +287,8 @@ public class App extends GameApplication {
         // ผูกกล้องกับเอนทิตีของผู้เล่น
         FXGL.getGameScene().getViewport().bindToEntity(playerEntity, getAppWidth() / 2.0, getAppHeight() / 2.0);
         FXGL.getGameScene().getViewport().setBounds(-200, -200, 1500, 900); // กำหนดขอบเขตกล้องตามขนาดแผนที่
+        FXGL.getGameScene().getViewport().setZoom(1); // ซูมเข้าหน้าจอ
+
         FXGL.getInput().clearAll(); // ✅ ล้าง Input ที่มีอยู่ก่อนเริ่มเกมใหม่
 
         // สร้าง SkillSystem ที่เชื่อมกับ Player
@@ -299,7 +304,8 @@ public class App extends GameApplication {
         playerEntity.getComponent(PhysicsComponent.class).setVelocityY(0);
 
         
-        getGameWorld().addEntityFactory(new MonsterFactory());
+         getGameWorld().addEntityFactory(new MonsterFactory());
+         
         FXGL.getGameTimer().runAtInterval(() -> {
             double x = FXGLMath.random(0, getAppWidth() - 64); // Random x position
             double y = FXGLMath.random(0, getAppHeight() - 64); // Random y position

@@ -14,6 +14,8 @@ public class BossAnimation extends Component {
     private PhysicsComponent physics;
     private int speedX = 0;
     private int speedY = 0;
+    private boolean isStunned = false;
+    private double stunTimer = 0;
 
     private AnimatedTexture texture;
     private AnimationChannel animIdle, animWalkRight, animWalkLeft, animWalkUp, animWalkDown;
@@ -32,7 +34,7 @@ public class BossAnimation extends Component {
         animWalkDownRight = animWalkDown;
         animWalkDownLeft = animWalkDown;
 
-        animAttack = new AnimationChannel(FXGL.image(image), 6, 94, 94, Duration.seconds(1), 10, 16); // Example attack animation
+        animAttack = new AnimationChannel(FXGL.image(image), 17, 96, 96, Duration.seconds(0.5), 10, 16); // Example attack animation
 
         texture = new AnimatedTexture(animIdle);
         physics = new PhysicsComponent();
@@ -43,12 +45,34 @@ public class BossAnimation extends Component {
     public void onAdded() {
         entity.getTransformComponent().setScaleOrigin(new Point2D(64, 64));
         entity.getViewComponent().addChild(texture);
+        entity.setScaleX(2); // Scale the texture by 2.5
+        entity.setScaleY(2); // Scale the texture by 2.5
     }
 
     @Override
     public void onUpdate(double tpf) {
+        if (isStunned) {
+            stunTimer -= tpf;
+            if (stunTimer <= 0) {
+                isStunned = false;
+            }
+            physics.setVelocityX(0);
+            physics.setVelocityY(0);
+            if (texture.getAnimationChannel() != animAttack) {
+                texture.loopAnimationChannel(animAttack);
+            }
+            return;
+        }
+
         physics.setVelocityX(speedX);
         physics.setVelocityY(speedY);
+
+        if (speedX == 0 && speedY == 0) {
+            if (texture.getAnimationChannel() != animIdle) {
+                texture.loopAnimationChannel(animIdle);
+            }
+            return;
+        }
 
         if (speedX > 0 && speedY < 0) { // เดินขึ้น-ขวา ↗
             if (texture.getAnimationChannel() != animWalkUpRight) {
@@ -82,17 +106,6 @@ public class BossAnimation extends Component {
             if (texture.getAnimationChannel() != animWalkUp) {
                 texture.loopAnimationChannel(animWalkUp);
             }
-        } else { // หยุดเดิน
-            if (texture.getAnimationChannel() != animIdle) {
-                texture.loopAnimationChannel(animIdle);
-            }
-        }
-
-        // หยุดเมื่อความเร็วต่ำกว่า 1
-        if (Math.abs(speedX) < 1 && Math.abs(speedY) < 1) {
-            speedX = 0;
-            speedY = 0;
-            texture.loopAnimationChannel(animIdle);
         }
     }
 
@@ -116,8 +129,17 @@ public class BossAnimation extends Component {
 
     public void attack() {
         if (texture.getAnimationChannel() != animAttack) {
-            texture.playAnimationChannel(animAttack);
+            texture.loopAnimationChannel(animAttack);
         }
+    }
+
+    public void stun(double duration) {
+        isStunned = true;
+        stunTimer = duration;
+    }
+
+    public boolean isStunned() {
+        return isStunned;
     }
 
     public void setSpeedX(int speedX) {

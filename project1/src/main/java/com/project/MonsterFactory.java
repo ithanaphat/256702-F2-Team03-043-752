@@ -37,9 +37,10 @@ public class MonsterFactory implements EntityFactory {
                 .at(data.getX(), data.getY())
                 .viewWithBBox(monsterImage)
 
-                .bbox(new HitBox("Body", BoundingShape.box(50, 50)))
+                .bbox(new HitBox("Body", BoundingShape.box(32, 32)))
                 .bbox(new HitBox("Body", new Point2D(12, 14), BoundingShape.box(50, 50)))
                 .with(new CollidableComponent(true), physics, new Health(monsterHealth))
+                .scale(0.8, 0.8) // ปรับขนาดลงครึ่งนึง
                 .build();
 
         monster.setProperty("expReward", monsterExp); // ใส่ EXP ที่จะได้รับ
@@ -69,6 +70,13 @@ public class MonsterFactory implements EntityFactory {
                 // ตั้งค่าความเร็วให้มอนสเตอร์เคลื่อนที่เข้าหาผู้เล่น
                 physics.setVelocityX(direction.getX() * SPEED);
                 physics.setVelocityY(direction.getY() * SPEED);
+
+                // Flip the monster texture based on the player's position
+                if (playerPos.getX() < monsterPos.getX()) {
+                    entity.setScaleX(0.8); // Flip to face left
+                } else {
+                    entity.setScaleX(-0.8); // Face right
+                }
             }
         }
 
@@ -82,13 +90,12 @@ public class MonsterFactory implements EntityFactory {
         int bossHealth = 200;
         int bossDamage = 50;
         int bossExp = 100;
-        String bossImage = "boss.png";
 
         Entity boss = entityBuilder()
                 .type(EntityType.BOSS)
                 .at(data.getX(), data.getY())
                // .viewWithBBox(bossImage)
-                .bbox(new HitBox("Body", BoundingShape.box(100, 100)))
+                .bbox(new HitBox("Body", BoundingShape.box(64, 64)))
                 .with(new CollidableComponent(true), physics, new Health(bossHealth))
                 .with(new BossAnimation("boss.png")) // Add BossAnimation component
                 .build();
@@ -100,18 +107,33 @@ public class MonsterFactory implements EntityFactory {
         return boss;
     }
 
-    private static class BossAI extends Component {
+    public static class BossAI extends Component {
         private final PhysicsComponent physics;
         private final BossAnimation bossAnimation;
         private static final double SPEED = 50;
+        private boolean isStunned = false;
+        private double stunTimer = 0;
 
         public BossAI(PhysicsComponent physics, BossAnimation bossAnimation) {
             this.physics = physics;
             this.bossAnimation = bossAnimation;
+
+            
         }
 
         @Override
         public void onUpdate(double tpf) {
+            if (isStunned) {
+                stunTimer -= tpf;
+                if (stunTimer <= 0) {
+                    isStunned = false;
+                }
+                physics.setVelocityX(0);
+                physics.setVelocityY(0);
+                bossAnimation.attack(); // Trigger attack animation when stunned
+                return;
+            }
+
             var players = getGameWorld().getEntitiesByType(EntityType.PLAYER);
 
             if (!players.isEmpty()) {
@@ -125,8 +147,18 @@ public class MonsterFactory implements EntityFactory {
                 // Update BossAnimation speed
                 bossAnimation.setSpeedX((int) (direction.getX() * SPEED));
                 bossAnimation.setSpeedY((int) (direction.getY() * SPEED));
+
+                // Flip the boss texture based on the player's position
+            if (playerPos.getX() < bossPos.getX()) {
+                entity.setScaleX(-2); // Flip to face left
+            } else {
+                entity.setScaleX(2); // Face right
+            }
+
             }
         }
+
+        
     }
 
     private int calculateMonsterHealth(int playerLevel) {
@@ -164,5 +196,7 @@ public class MonsterFactory implements EntityFactory {
         else
             return "en1.png";
     }
+
+    
 
 }

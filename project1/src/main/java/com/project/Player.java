@@ -27,13 +27,14 @@ public class Player extends Entity {
         player = FXGL.entityBuilder()
                 .at(18.00, 598.00)
                 .type(EntityType.PLAYER)
-                .bbox(new HitBox("Body", new Point2D(12, 14), BoundingShape.box(40, 40)))
+                .bbox(new HitBox("Body", new Point2D(12, 14), BoundingShape.box(32, 32)))
                 .anchorFromCenter() // ทำให้ BBOX อยู่ตรงกลาง Entity
                 .with(physics, animationComponent, new CollidableComponent(true), new Health(health), stats) // เพิ่ม
-                                                                                                             // Stats
-                                                                                                             // component
-                                                                                                             // เข้าไป
+                .scale(0.8, 0.8) // ปรับขนาดลงครึ่งนึง
+                                                              
                 .buildAndAttach();
+
+                
 
         return player;
     }

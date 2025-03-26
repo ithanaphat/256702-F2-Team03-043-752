@@ -130,6 +130,8 @@ public class StartScreen extends FXGLMenu {
             // Rebind the camera to the new player entity
             FXGL.getGameScene().getViewport().bindToEntity(newPlayer, FXGL.getAppWidth() / 2.0, FXGL.getAppHeight() / 2.0);
             FXGL.getGameScene().getViewport().setBounds(-200, -200, 1500, 900); // Adjust the bounds as needed
+            FXGL.getGameScene().getViewport().setZoom(1); // ซูมเข้าหน้าจอ
+
 
             FXGL.getNotificationService().pushNotification("Game Loaded!");
             ((App) FXGL.getApp()).reloadStatsAfterLoad();
