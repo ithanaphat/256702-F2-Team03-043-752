@@ -172,11 +172,11 @@ public class MonsterFactory implements EntityFactory {
 
     private int calculateMonsterExp(int playerLevel) {
         if (playerLevel >= 20)
-            return 20;
+            return 50000;
         else if (playerLevel >= 10)
-            return 10;
+            return 25000;
         else
-            return 5;
+            return 5000;
     }
 
     private int calculateMonsterDamage(int playerLevel) {

@@ -15,7 +15,7 @@ public class DeathScreen extends FXGLMenu {
 
         
         // Play death sound
-        FXGL.getAudioPlayer().playSound(FXGL.getAssetLoader().loadSound("death_sound.mp3"));
+       // FXGL.getAudioPlayer().playSound(FXGL.getAssetLoader().loadSound("death_sound.mp3"));
 
         // Create background
         var bg = new javafx.scene.shape.Rectangle(FXGL.getAppWidth(), FXGL.getAppHeight());

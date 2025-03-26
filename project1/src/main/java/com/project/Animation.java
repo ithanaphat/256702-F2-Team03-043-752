@@ -29,6 +29,8 @@ public class Animation extends Component {
     private AnimationChannel animIdle, animWalkRight, animWalkLeft, animWalkUp, animWalkDown;
     private AnimationChannel animWalkUpRight, animWalkUpLeft, animWalkDownRight, animWalkDownLeft;
     private AnimationChannel animAttack;
+    private boolean isAttacking = false; // เพิ่มตัวแปรสถานะการโจมตี
+
 
     public Animation(String image) {
         animIdle = new AnimationChannel(FXGL.image(image), 4, 64, 64, Duration.seconds(1), 0, 0);
@@ -231,6 +233,14 @@ public class Animation extends Component {
 
     public boolean isRight() {
         return right;
+    }
+
+    public void attack() {
+        if (!isAttacking) {
+            isAttacking = true;
+            playAttackEffect(entity.getPosition(), Color.DARKBLUE, Color.DARKGREY);
+            FXGL.getGameTimer().runOnceAfter(() -> isAttacking = false, Duration.seconds(0.5));
+        }
     }
 
 }

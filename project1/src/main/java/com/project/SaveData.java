@@ -13,10 +13,13 @@ public class SaveData implements Serializable {
     private int attack;
     private double posX;
     private double posY;
+    private int bossHealth;
+    private double bossPosX;
+    private double bossPosY;
     private List<Point2D> enemyPositions; // Add enemy positions
 
     public SaveData(int health, int maxHealth, int level, int experience, int attack, double posX, double posY,
-            List<Point2D> enemyPositions) {
+            List<Point2D> enemyPositions, int bossHealth, double bossPosX, double bossPosY) {
         this.health = health;
         this.level = level;
         this.maxHealth = maxHealth;
@@ -25,6 +28,9 @@ public class SaveData implements Serializable {
         this.posX = posX;
         this.posY = posY;
         this.enemyPositions = enemyPositions;
+        this.bossHealth = bossHealth;
+        this.bossPosX = bossPosX;
+        this.bossPosY = bossPosY;
     }
 
     public int getHealth() {
@@ -57,5 +63,17 @@ public class SaveData implements Serializable {
 
     public List<Point2D> getEnemyPositions() {
         return enemyPositions;
+    }
+
+    public int getBossHealth() {
+        return bossHealth;
+    }
+
+    public double getBossPosX() {
+        return bossPosX;
+    }
+
+    public double getBossPosY() {
+        return bossPosY;
     }
 }

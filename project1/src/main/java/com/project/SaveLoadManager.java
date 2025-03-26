@@ -1,15 +1,16 @@
 package com.project;
 
 import com.almasb.fxgl.dsl.FXGL;
+import com.almasb.fxgl.entity.Entity;
 import javafx.geometry.Point2D;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SaveLoadManager {
-    public static final String SAVE_FILE = "c:/Users/t1669/OneDrive/เดสก์ท็อป/java practise/Game Project Java/256702-F2-Team03-043-752/savegame.txt";
+    public static final String SAVE_FILE = "savegame.txt";
 
-    public static void saveGame(Stats stats, double posX, double posY, List<Point2D> enemyPositions) {
+    public static void saveGame(Stats stats, double posX, double posY, List<Point2D> enemyPositions, Entity boss) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(SAVE_FILE))) {
             writer.write(stats.getHealth() + "\n");
             writer.write(stats.getMaxHealth() + "\n");
@@ -21,6 +22,15 @@ public class SaveLoadManager {
             for (Point2D pos : enemyPositions) {
                 writer.write(pos.getX() + "," + pos.getY() + "\n");
             }
+            
+            if (boss != null) {
+                writer.write(boss.getComponent(Health.class).getHealth() + "\n");
+                writer.write(boss.getX() + "\n");
+                writer.write(boss.getY() + "\n");
+            } else {
+                writer.write("-1\n");
+            }
+
             FXGL.getNotificationService().pushNotification("บันทึกเกมสำเร็จ!");
         } catch (IOException e) {
             FXGL.getNotificationService().pushNotification("บันทึกเกมล้มเหลว!");
@@ -39,13 +49,18 @@ public class SaveLoadManager {
             double posY = Double.parseDouble(reader.readLine());
             List<Point2D> enemyPositions = new ArrayList<>();
             String line;
-            while ((line = reader.readLine()) != null) {
+            while ((line = reader.readLine()) != null && line.contains(",")) {
                 String[] parts = line.split(",");
                 double x = Double.parseDouble(parts[0]);
                 double y = Double.parseDouble(parts[1]);
                 enemyPositions.add(new Point2D(x, y));
             }
-            return new SaveData(health, maxHealth, level, experience, attack, posX, posY, enemyPositions);
+            
+            int bossHealth = Integer.parseInt(line);
+            double bossPosX = bossHealth == -1 ? -1 : Double.parseDouble(reader.readLine());
+            double bossPosY = bossHealth == -1 ? -1 : Double.parseDouble(reader.readLine());
+            
+            return new SaveData(health, maxHealth, level, experience, attack, posX, posY, enemyPositions, bossHealth, bossPosX, bossPosY);
         } catch (FileNotFoundException e) {
             FXGL.getNotificationService().pushNotification("ไม่พบไฟล์เซฟ!");
             e.printStackTrace();
