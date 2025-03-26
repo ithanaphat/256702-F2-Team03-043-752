@@ -95,6 +95,14 @@ public class App extends GameApplication {
 
         });
 
+        onCollisionBegin(EntityType.BOSS, EntityType.PLAYER, (boss, player) -> {
+            int monsterDamage = boss.getInt("damage");
+            stats.damage(monsterDamage);
+
+            uiManager.updateHealthDisplay(); // ✅ อัปเดต Health Bar
+
+        });
+
     }
 
     @Override
@@ -291,13 +299,18 @@ public class App extends GameApplication {
         playerEntity.getComponent(PhysicsComponent.class).setVelocityY(0);
 
         
-        // getGameWorld().addEntityFactory(new MonsterFactory());
-        // FXGL.getGameTimer().runAtInterval(() -> {
-        //     double x = FXGLMath.random(0, getAppWidth() - 64); // Random x position
-        //     double y = FXGLMath.random(0, getAppHeight() - 64); // Random y position
-        //     spawn("monster", x, y);
-        // }, Duration.seconds(2));
+        getGameWorld().addEntityFactory(new MonsterFactory());
+        FXGL.getGameTimer().runAtInterval(() -> {
+            double x = FXGLMath.random(0, getAppWidth() - 64); // Random x position
+            double y = FXGLMath.random(0, getAppHeight() - 64); // Random y position
+            spawn("monster", x, y);
+        }, Duration.seconds(2));
 
+        FXGL.getGameTimer().runOnceAfter(() -> {
+            double x = FXGLMath.random(0, getAppWidth() - 128); // Random x position for boss
+            double y = FXGLMath.random(0, getAppHeight() - 128); // Random y position for boss
+            spawn("boss", x, y);
+        }, Duration.seconds(1));
 
       
          // Play background soundtrack

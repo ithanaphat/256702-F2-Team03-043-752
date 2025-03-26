@@ -22,12 +22,9 @@ public class MonsterFactory implements EntityFactory {
     public Entity newMonster(SpawnData data) {
         PhysicsComponent physics = new PhysicsComponent();
         physics.setBodyType(BodyType.DYNAMIC);
-       
-
 
         Stats playerStats = FXGL.geto("playerStats");
-        
-        
+
         int playerLevel = playerStats.getLevel();
         String monsterImage = getMonsterImageByLevel(playerLevel);
 
@@ -77,6 +74,61 @@ public class MonsterFactory implements EntityFactory {
 
     }
 
+    @Spawns("boss")
+    public Entity newBoss(SpawnData data) {
+        PhysicsComponent physics = new PhysicsComponent();
+        physics.setBodyType(BodyType.DYNAMIC);
+
+        int bossHealth = 200;
+        int bossDamage = 50;
+        int bossExp = 100;
+        String bossImage = "boss.png";
+
+        Entity boss = entityBuilder()
+                .type(EntityType.BOSS)
+                .at(data.getX(), data.getY())
+               // .viewWithBBox(bossImage)
+                .bbox(new HitBox("Body", BoundingShape.box(100, 100)))
+                .with(new CollidableComponent(true), physics, new Health(bossHealth))
+                .with(new BossAnimation("boss.png")) // Add BossAnimation component
+                .build();
+
+        boss.setProperty("expReward", bossExp);
+        boss.setProperty("damage", bossDamage);
+
+        boss.addComponent(new BossAI(physics, boss.getComponent(BossAnimation.class)));
+        return boss;
+    }
+
+    private static class BossAI extends Component {
+        private final PhysicsComponent physics;
+        private final BossAnimation bossAnimation;
+        private static final double SPEED = 50;
+
+        public BossAI(PhysicsComponent physics, BossAnimation bossAnimation) {
+            this.physics = physics;
+            this.bossAnimation = bossAnimation;
+        }
+
+        @Override
+        public void onUpdate(double tpf) {
+            var players = getGameWorld().getEntitiesByType(EntityType.PLAYER);
+
+            if (!players.isEmpty()) {
+                Entity player = players.get(0);
+                Point2D bossPos = entity.getPosition();
+                Point2D playerPos = player.getPosition();
+                Point2D direction = playerPos.subtract(bossPos).normalize();
+                physics.setVelocityX(direction.getX() * SPEED);
+                physics.setVelocityY(direction.getY() * SPEED);
+
+                // Update BossAnimation speed
+                bossAnimation.setSpeedX((int) (direction.getX() * SPEED));
+                bossAnimation.setSpeedY((int) (direction.getY() * SPEED));
+            }
+        }
+    }
+
     private int calculateMonsterHealth(int playerLevel) {
         if (playerLevel >= 20)
             return 80;
@@ -112,6 +164,5 @@ public class MonsterFactory implements EntityFactory {
         else
             return "en1.png";
     }
-    
 
 }

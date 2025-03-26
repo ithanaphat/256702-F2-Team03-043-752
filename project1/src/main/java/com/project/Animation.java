@@ -28,6 +28,7 @@ public class Animation extends Component {
     private AnimatedTexture texture;
     private AnimationChannel animIdle, animWalkRight, animWalkLeft, animWalkUp, animWalkDown;
     private AnimationChannel animWalkUpRight, animWalkUpLeft, animWalkDownRight, animWalkDownLeft;
+    private AnimationChannel animAttack;
 
     public Animation(String image) {
         animIdle = new AnimationChannel(FXGL.image(image), 4, 64, 64, Duration.seconds(1), 0, 0);
@@ -40,6 +41,8 @@ public class Animation extends Component {
         animWalkUpLeft = animWalkUp;
         animWalkDownRight = animWalkDown;
         animWalkDownLeft = animWalkDown;
+
+        animAttack = new AnimationChannel(FXGL.image(image), 4, 64, 64, Duration.seconds(0.5), 16, 19); // Example attack animation
 
         texture = new AnimatedTexture(animIdle);
         physics = new PhysicsComponent();
