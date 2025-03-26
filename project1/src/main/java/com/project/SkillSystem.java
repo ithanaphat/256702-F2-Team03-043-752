@@ -2,6 +2,9 @@ package com.project;
 
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 import static com.almasb.fxgl.dsl.FXGL.*;
 
@@ -15,6 +18,7 @@ public class SkillSystem {
     private boolean isSkillActive = false; // ✅ เช็คว่าสกิลกำลังทำงานอยู่หรือไม่
     private boolean isSkillEActive = false; // ✅ เช็คว่าสกิล E กำลังทำงานอยู่หรือไม่
     private final Map<KeyCode, ImageView> skillIcons = new HashMap<>();
+    private final Map<KeyCode, Text> cooldownTexts = new HashMap<>();
 
     public SkillSystem(Player player2) {
         this.player = player2;
@@ -41,6 +45,17 @@ public class SkillSystem {
 
         skillIcons.put(keyCode, skillIcon);
         addUINode(skillIcon); // ✅ เพิ่มไอคอนครั้งเดียวเท่านั้น
+
+        // เพิ่ม Text สำหรับ cooldown
+        Text cooldownText = new Text("");
+        cooldownText.setFont(Font.font(20));
+        cooldownText.setFill(Color.RED);
+        cooldownText.setTranslateX(skillIcon.getTranslateX() + 15);
+        cooldownText.setTranslateY(skillIcon.getTranslateY() + 30);
+        cooldownText.setVisible(false);
+
+        cooldownTexts.put(keyCode, cooldownText);
+        addUINode(cooldownText);
     }
 
     public void activateSkill(KeyCode keyCode) {
@@ -67,7 +82,7 @@ public class SkillSystem {
     }
 
     private void skillOne() {
-        System.out.println("healเต็มเลือดซะะะ!!!");
+        showFloatingText("healเต็มเลือดซะะะ!!!");
         Stats stats = player.getStats();
         int maxHealth = stats.getMaxHealth();
         int healAmount = (int) (maxHealth * 0.1); // Heal 10% of max health
@@ -91,7 +106,7 @@ public class SkillSystem {
     }
 
     private void skillTwo() {
-        System.out.println("หมัดอันทรงพลังงงงง!!!");
+        showFloatingText("หมัดอันทรงพลังงงงง!!!");
         Stats stats = player.getStats();
         int originalAttack = stats.getAttack();
         int increasedAttack = (int) (originalAttack * 1.5); // เพิ่มพลังโจมตี 50%
@@ -109,12 +124,7 @@ public class SkillSystem {
     
 
     private void skillThree() {
-        System.out.println("The Flash!!!");
         Animation animation = player.getPlayerEntity().getComponent(Animation.class);
-        if (animation == null) {
-            System.out.println("Animation component not found!");
-            return;
-        }
 
         // ดึงทิศจาก input ปัจจุบัน
         double dirX = 0;
@@ -131,10 +141,12 @@ public class SkillSystem {
 
         // ❌ ถ้าไม่ได้กดทิศทางใดเลย → ไม่ Dash
         if (dirX == 0 && dirY == 0) {
-            System.out.println("ข่าไม่ขยับ จะskillไม่ได้นะจ๊ะ");
+            showFloatingText("ข่าไม่ขยับ จะskillไม่ได้นะจ๊ะ");
             isSkillActive = false; // คืน status skill ทันที เพราะไม่ Dash
             return;
         }
+
+        showFloatingText("The Flash!!!");
 
         double length = Math.sqrt(dirX * dirX + dirY * dirY);
         dirX /= length;
@@ -152,20 +164,74 @@ public class SkillSystem {
 
     private void setSkillCooldown(KeyCode keyCode, Duration duration) {
         ImageView skillIcon = skillIcons.get(keyCode);
+        Text cooldownText = cooldownTexts.get(keyCode);
+
         if (skillIcon != null) {
             skillIcon.setOpacity(0.5); // ✅ เปลี่ยนเป็นสีเทา
         }
+        if (cooldownText != null) {
+            cooldownText.setVisible(true);
+        }
 
-        runOnce(() -> {
-            isSkillActive = false; // ✅ ปลดล็อกให้ใช้สกิลใหม่ได้
-            if (skillIcon != null) {
-                skillIcon.setOpacity(1.0); // ✅ คืนค่าไอคอนเป็นปกติ
+        double totalSeconds = duration.toSeconds();
+
+        // สร้างตัวแปร array เพื่อใช้ใน lambda (เพราะ int ใช้ไม่ได้ใน lambda)
+        final int[] remainingSeconds = {(int) totalSeconds};
+
+        // แสดงตัวเลข countdown ทุก 1 วิ
+        run(() -> {
+            if (cooldownText != null) {
+                cooldownText.setText(String.valueOf(remainingSeconds[0]));
+                remainingSeconds[0]--;
             }
-        }, duration);
-    }
+            if (remainingSeconds[0] < 0) {
+                if (cooldownText != null) cooldownText.setVisible(false);
+                if (skillIcon != null) skillIcon.setOpacity(1.0);
+                isSkillActive = false;
+                getGameTimer().clear(); // หยุด run loop
+            }
+        }, Duration.seconds(1));
+        }
 
-    public void setPlayer(Player newPlayer) {
-        this.player = newPlayer;
-    }
+        private void showFloatingText(String message) {
+            Text floatingText = new Text(message);
+            floatingText.setFont(Font.font(24));
+            floatingText.setFill(Color.YELLOW);
+            floatingText.setStroke(Color.BLUE);
+            floatingText.setStrokeWidth(2);
+        
+            // world position ของ player
+            double playerX = player.getPlayerEntity().getX();
+            double playerY = player.getPlayerEntity().getY();
+        
+            // viewport offset (กล้อง)
+            double camX = getGameScene().getViewport().getX();
+            double camY = getGameScene().getViewport().getY();
+        
+            // world → screen
+            double screenX = playerX - camX;
+            double screenY = playerY - camY;
+        
+            // วาง text ชั่วคราวเพื่อให้ CSS ทำงาน
+            addUINode(floatingText);
+            floatingText.applyCss();
+        
+            // ดึงขนาดจริงของข้อความหลัง applyCss
+            double textWidth = floatingText.getLayoutBounds().getWidth();
+        
+            // Center text ให้ตรงหัว player พอดี
+            floatingText.setTranslateX(screenX - textWidth / 2);
+            floatingText.setTranslateY(screenY - 50);  // ลอยขึ้นเหนือหัว
+        
+            // ทำข้อความลอยขึ้นเรื่อยๆ
+            run(() -> floatingText.setTranslateY(floatingText.getTranslateY() - 1), Duration.seconds(0.016), 30);
+        
+            // ลบออกหลังจาก 1.5 วินาที
+            runOnce(() -> removeUINode(floatingText), Duration.seconds(1.5));
+        }
+
+        public void setPlayer(Player newPlayer) {
+            this.player = newPlayer;
+        }
 
 }
