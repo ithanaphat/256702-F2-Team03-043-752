@@ -23,18 +23,18 @@ public class BossAnimation extends Component {
     private AnimationChannel animAttack;
 
     public BossAnimation(String image) {
-        animIdle = new AnimationChannel(FXGL.image(image), 10, 96, 96, Duration.seconds(1), 0, 9);
-        animWalkDown = new AnimationChannel(FXGL.image(image), 16, 96, 96, Duration.seconds(1), 17, 31);
-        animWalkLeft = new AnimationChannel(FXGL.image(image), 16, 96, 96, Duration.seconds(1), 17, 31);
-        animWalkRight = new AnimationChannel(FXGL.image(image), 16, 96, 96, Duration.seconds(1), 17, 31);
-        animWalkUp = new AnimationChannel(FXGL.image(image), 16, 96, 96, Duration.seconds(1), 17, 31);
+        animIdle = new AnimationChannel(FXGL.image(image), 5, 64, 34, Duration.seconds(1), 7, 22);
+        animWalkDown = new AnimationChannel(FXGL.image(image), 5, 64, 34, Duration.seconds(1), 7, 22);
+        animWalkLeft = new AnimationChannel(FXGL.image(image), 5, 64, 34, Duration.seconds(1), 7, 22);
+        animWalkRight = new AnimationChannel(FXGL.image(image), 5, 64, 34, Duration.seconds(1), 7, 22);
+        animWalkUp = new AnimationChannel(FXGL.image(image),5 , 64, 34, Duration.seconds(1), 7, 22);
 
         animWalkUpRight = animWalkUp;
         animWalkUpLeft = animWalkUp;
         animWalkDownRight = animWalkDown;
         animWalkDownLeft = animWalkDown;
 
-        animAttack = new AnimationChannel(FXGL.image(image), 17, 96, 96, Duration.seconds(0.5), 10, 16); // Example attack animation
+        animAttack = new AnimationChannel(FXGL.image(image), 5, 64, 34, Duration.seconds(0.5), 0, 6); // Example attack animation
 
         texture = new AnimatedTexture(animIdle);
         physics = new PhysicsComponent();

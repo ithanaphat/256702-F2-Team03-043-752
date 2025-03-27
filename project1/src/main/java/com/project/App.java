@@ -300,6 +300,17 @@ public class App extends GameApplication {
 
     @Override
     protected void initGame() {
+
+        // ล้างสถานะของเกม
+    bossSpawned = false;
+
+    if (monsterSpawnTask != null) {
+        monsterSpawnTask.expire();
+        monsterSpawnTask = null;
+    }
+
+    // ลบเอนทิตีทั้งหมดใน GameWorld
+    getGameWorld().getEntitiesCopy().forEach(Entity::removeFromWorld);
         FXGL.getInput().clearAll(); // ✅ ล้าง Input ที่มีอยู่ก่อนเริ่มเกมใหม่
 
         PhysicsComponent physics = new PhysicsComponent();

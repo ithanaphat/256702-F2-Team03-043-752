@@ -12,6 +12,8 @@ import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
 
 import javafx.geometry.Point2D;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
 
@@ -47,6 +49,7 @@ public class MonsterFactory implements EntityFactory {
         monster.setProperty("damage", monsterDamage); // ใส่ค่าดาเมจของมอนสเตอร์
 
         monster.addComponent(new MonsterAI(physics));
+
         return monster;
     }
 
@@ -83,29 +86,33 @@ public class MonsterFactory implements EntityFactory {
     }
 
     @Spawns("boss")
-    public Entity newBoss(SpawnData data) {
-        PhysicsComponent physics = new PhysicsComponent();
-        physics.setBodyType(BodyType.DYNAMIC);
+public Entity newBoss(SpawnData data) {
+    PhysicsComponent physics = new PhysicsComponent();
+    physics.setBodyType(BodyType.DYNAMIC);
 
-        int bossHealth = 200;
-        int bossDamage = 50;
-        int bossExp = 100;
+    int bossHealth = 200;
+    int bossDamage = 50;
+    int bossExp = 100;
 
-        Entity boss = entityBuilder()
-                .type(EntityType.BOSS)
-                .at(data.getX(), data.getY())
-               // .viewWithBBox(bossImage)
-                .bbox(new HitBox("Body", BoundingShape.box(64, 64)))
-                .with(new CollidableComponent(true), physics, new Health(bossHealth))
-                .with(new BossAnimation("boss.png")) // Add BossAnimation component
-                .build();
+    Entity boss = entityBuilder()
+            .type(EntityType.BOSS)
+            .at(data.getX(), data.getY())
+            .bbox(new HitBox("Body", new Point2D(0, 0), BoundingShape.box(32, 32))) // ปรับตำแหน่ง HitBox
+            .with(new CollidableComponent(true), physics, new Health(bossHealth))
+            .with(new BossAnimation("boss.png")) // เพิ่มคอมโพเนนต์แอนิเมชันของบอส
+            .build();
 
-        boss.setProperty("expReward", bossExp);
-        boss.setProperty("damage", bossDamage);
+    boss.setProperty("expReward", bossExp);
+    boss.setProperty("damage", bossDamage);
 
-        boss.addComponent(new BossAI(physics, boss.getComponent(BossAnimation.class)));
-        return boss;
-    }
+    boss.addComponent(new BossAI(physics, boss.getComponent(BossAnimation.class)));
+
+    // ตั้งค่าจุดหมุน (Pivot) เพื่อป้องกันการเลื่อนของ HitBox
+    boss.getTransformComponent().setScaleOrigin(new Point2D(32, 32)); // จุดหมุนตรงกลาง HitBox
+
+
+    return boss;
+}
 
     public static class BossAI extends Component {
         private final PhysicsComponent physics;
