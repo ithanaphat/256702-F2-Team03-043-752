@@ -304,6 +304,8 @@ public class App extends GameApplication {
         // ล้างสถานะของเกม
     bossSpawned = false;
 
+   
+
     if (monsterSpawnTask != null) {
         monsterSpawnTask.expire();
         monsterSpawnTask = null;
@@ -311,6 +313,19 @@ public class App extends GameApplication {
 
     // ลบเอนทิตีทั้งหมดใน GameWorld
     getGameWorld().getEntitiesCopy().forEach(Entity::removeFromWorld);
+
+
+// ใช้ FXGL.runOnce เพื่อหยุดเพลงทั้งหมดหลังจากการลบเอนทิตีเสร็จสิ้น
+FXGL.runOnce(() -> {
+    FXGL.getAudioPlayer().stopAllMusic();
+
+    // เล่นเพลงพื้นหลังเริ่มต้น
+    FXGL.getAudioPlayer().loopMusic(FXGL.getAssetLoader().loadMusic("background.mp3"));
+    FXGL.getSettings().setGlobalMusicVolume(0.5); // ตั้งค่าเสียงเพลงเริ่มต้น
+}, Duration.seconds(0.1));
+
+
+
         FXGL.getInput().clearAll(); // ✅ ล้าง Input ที่มีอยู่ก่อนเริ่มเกมใหม่
 
         PhysicsComponent physics = new PhysicsComponent();
@@ -355,9 +370,7 @@ public class App extends GameApplication {
             spawn("monster", x, y);
         }, Duration.seconds(2));
 
-        // Play background soundtrack
-        FXGL.getAudioPlayer().loopMusic(FXGL.getAssetLoader().loadMusic("background.mp3"));
-        FXGL.getSettings().setGlobalMusicVolume(0.5); // Set volume to 50%
+
 
     }
 
@@ -383,6 +396,10 @@ protected void onUpdate(double tpf) {
             monsterSpawnTask.expire();
             monsterSpawnTask = null; // ตั้งค่าเป็น null เพื่อป้องกันการเรียกใช้ซ้ำ
         }
+
+         // เปลี่ยนเพลงเมื่อถึงเลเวล 30
+         FXGL.getAudioPlayer().stopAllMusic(); // หยุดเพลงเก่า
+         FXGL.getAudioPlayer().loopMusic(FXGL.getAssetLoader().loadMusic("background_boss.mp3")); // เล่นเพลงใหม่
 
         // ตรวจสอบว่ามีบอสอยู่แล้วหรือไม่
         boolean bossExists = getGameWorld().getEntitiesByType(EntityType.BOSS).stream().findFirst().isPresent();
