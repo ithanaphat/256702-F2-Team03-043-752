@@ -21,6 +21,9 @@ public class UIManager {
     private Button btnUpgradeHP; // ✅ ปุ่มอัพเกรด HP
     private Button btnUpgradeAttack; // ✅ ปุ่มอัพเกรด Attack
     private SkillSystem skillSystem; // ✅ เพิ่มตัวแปร SkillSystem
+    private Rectangle bossHealthBar; // ✅ แถบเลือดบอส
+    private Rectangle bossHealthBarBackground; // ✅ พื้นหลังของแถบเลือดบอส
+    private Text bossHealthText; // ✅ ตัวเลขเลือดบอส
 
     public UIManager() {
         this.stats = FXGL.geto("playerStats");
@@ -179,6 +182,35 @@ public class UIManager {
         point.setTranslateX(1050);
         point.setTranslateY(5);
 
+        // ✅ สร้างพื้นหลังของแถบเลือดบอส
+        bossHealthBarBackground = new Rectangle(400, 20);
+        bossHealthBarBackground.setTranslateX(440);
+        bossHealthBarBackground.setTranslateY(50);
+        bossHealthBarBackground.setFill(Color.GRAY);
+
+        // ✅ สร้างแถบเลือดบอส
+        bossHealthBar = new Rectangle(400, 20);
+        bossHealthBar.setTranslateX(440);
+        bossHealthBar.setTranslateY(50);
+        bossHealthBar.setFill(Color.RED);
+
+        // ✅ สร้างตัวเลขเลือดบอส
+        bossHealthText = new Text();
+        bossHealthText.setTranslateX(580);
+        bossHealthText.setTranslateY(65);
+        bossHealthText.setFill(Color.WHITE);
+        bossHealthText.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+        bossHealthText.setVisible(false); // ซ่อนตัวเลขเลือดบอสเริ่มต้น
+
+        // เพิ่ม UI ลงในหน้าจอ
+        FXGL.getGameScene().addUINode(bossHealthBarBackground);
+        FXGL.getGameScene().addUINode(bossHealthBar);
+        FXGL.getGameScene().addUINode(bossHealthText);
+
+        // ซ่อนแถบเลือดบอสเริ่มต้น
+        bossHealthBar.setVisible(false);
+        bossHealthBarBackground.setVisible(false); // ซ่อนพื้นหลังของแถบเลือดบอสเริ่มต้น
+
         // ✅ เพิ่ม UI เข้าไปในเกม
         // FXGL.getGameScene().addUINode(hpLabel);
         FXGL.getGameScene().addUINode(healthBarBackground);
@@ -257,4 +289,29 @@ public class UIManager {
         updateHealthDisplay();
     }
 
+    public void updateBossUI(int currentHealth, int maxHealth) {
+        if (currentHealth <= 0) {
+            bossHealthBar.setVisible(false);
+            bossHealthBarBackground.setVisible(false); // ซ่อนพื้นหลังของแถบเลือดบอส
+            bossHealthText.setVisible(false);
+            return;
+        }
+
+        bossHealthBar.setVisible(true);
+        bossHealthBarBackground.setVisible(true); // แสดงพื้นหลังของแถบเลือดบอส
+        bossHealthText.setVisible(true);
+
+        // อัปเดตความกว้างของแถบเลือด
+        double healthPercentage = (double) currentHealth / maxHealth;
+        bossHealthBar.setWidth(400 * healthPercentage);
+
+        // อัปเดตตัวเลขเลือด
+        bossHealthText.setText(currentHealth + " / " + maxHealth);
+    }
+
+    public void hideBossUI() {
+        bossHealthBar.setVisible(false);
+        bossHealthBarBackground.setVisible(false); // ซ่อนพื้นหลังของแถบเลือดบอส
+        bossHealthText.setVisible(false);
+    }
 }

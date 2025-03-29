@@ -116,12 +116,9 @@ public class PauseMenu extends FXGLMenu {
         // โหลดข้อมูลผู้เล่นจาก SaveData
         GameLoader.loadPlayerFromSave(data);
     
-        // หยุดเพลงทั้งหมด
-        FXGL.getAudioPlayer().stopAllMusic();
+      
     
-        // เล่นเพลงพื้นหลังเริ่มต้น
-        FXGL.getAudioPlayer().loopMusic(FXGL.getAssetLoader().loadMusic("background.mp3"));
-        FXGL.getSettings().setGlobalMusicVolume(0.5); // ตั้งค่าเสียงเพลงเริ่มต้น
+        
     }
 
     

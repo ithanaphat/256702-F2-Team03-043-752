@@ -42,16 +42,25 @@ public class GameLoader {
             spawn("monster", pos.getX(), pos.getY());
         }
 
-        if (data.getBossHealth() > 0) {
-            Entity boss = spawn("boss", data.getBossPosX(), data.getBossPosY());
-            Health bossHealth = boss.getComponent(Health.class);
-            if (bossHealth != null) {
-                bossHealth.setValue(data.getBossHealth());
-            }
-            ((App) FXGL.getApp()).setBossSpawned(true); // ตั้งค่าสถานะ bossSpawned
-        } else {
-            ((App) FXGL.getApp()).setBossSpawned(false); // ตั้งค่าสถานะ bossSpawned
+        // ตรวจสอบสถานะของบอส
+    if (data.getBossHealth() > 0) {
+        Entity boss = spawn("boss", data.getBossPosX(), data.getBossPosY());
+        Health bossHealth = boss.getComponent(Health.class);
+        if (bossHealth != null) {
+            bossHealth.setValue(data.getBossHealth());
         }
+        ((App) FXGL.getApp()).setBossSpawned(true);
+
+        // เปลี่ยนเพลงเป็นเพลงบอส
+        FXGL.getAudioPlayer().stopAllMusic();
+        FXGL.getAudioPlayer().loopMusic(FXGL.getAssetLoader().loadMusic("background_boss.mp3"));
+    } else {
+        ((App) FXGL.getApp()).setBossSpawned(false);
+
+        // เปลี่ยนเพลงเป็นเพลงพื้นหลังปกติ
+        FXGL.getAudioPlayer().stopAllMusic();
+        FXGL.getAudioPlayer().loopMusic(FXGL.getAssetLoader().loadMusic("background.mp3"));
+    }
 
         FXGL.getNotificationService().pushNotification("Game Loaded!");
         FXGL.<UIManager>geto("uiManager").updateHealthDisplay();
