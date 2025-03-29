@@ -11,7 +11,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-import static com.almasb.fxgl.dsl.FXGL.spawn;
+
 
 import java.util.List;
 import java.util.stream.Collectors;

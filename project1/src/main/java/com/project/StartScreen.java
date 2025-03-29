@@ -5,14 +5,13 @@ import com.almasb.fxgl.app.scene.MenuType;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.ui.FXGLButton;
 
-import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import java.io.File;
 import javafx.util.Duration;
-import com.almasb.fxgl.entity.Entity;
+
 
 public class StartScreen extends FXGLMenu {
 

@@ -2,6 +2,7 @@ package com.project;
 
 import com.almasb.fxgl.dsl.FXGL;
 import javafx.scene.control.Button;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
@@ -24,6 +25,7 @@ public class UIManager {
     private Rectangle bossHealthBar; // ✅ แถบเลือดบอส
     private Rectangle bossHealthBarBackground; // ✅ พื้นหลังของแถบเลือดบอส
     private Text bossHealthText; // ✅ ตัวเลขเลือดบอส
+    private ImageView bossFrame; // ✅ เพิ่มตัวแปรสำหรับ bossFrame
 
     public UIManager() {
         this.stats = FXGL.geto("playerStats");
@@ -39,6 +41,56 @@ public class UIManager {
     }
 
     public void initUI() {
+
+        // สร้างปุ่มใหม่ที่เมื่อเอาเมาส์ไปชี้จะแสดงข้อความ "wasd"
+Button btnWASD = new Button("i");
+btnWASD.setTranslateX(30); // กำหนดตำแหน่ง X ของปุ่ม
+btnWASD.setTranslateY(250); // กำหนดตำแหน่ง Y ของปุ่ม
+btnWASD.setPrefSize(50, 50); // กำหนดขนาดของปุ่ม
+btnWASD.setStyle(
+        "-fx-font-size: 18px; " +
+        "-fx-font-weight: bold; " +
+        "-fx-background-color: linear-gradient(to right,#fef4b7,#efc12d); " +
+        "-fx-text-fill: black; " +
+        "-fx-background-radius: 50%; " +
+        "-fx-border-color: black; " +
+        "-fx-border-width: 2px; " +
+        "-fx-border-radius: 50%;");
+
+// เพิ่มเอฟเฟกต์ hover
+btnWASD.setOnMouseEntered(e -> btnWASD.setStyle(
+        "-fx-font-size: 18px; " +
+        "-fx-font-weight: bold; " +
+        "-fx-background-color: linear-gradient(to right,#ecd382,#d0a10b); " +
+        "-fx-text-fill: white; " +
+        "-fx-background-radius: 50%; " +
+        "-fx-border-color: white; " +
+        "-fx-border-width: 2px; " +
+        "-fx-border-radius: 50%;"));
+
+btnWASD.setOnMouseExited(e -> btnWASD.setStyle(
+        "-fx-font-size: 18px; " +
+        "-fx-font-weight: bold; " +
+        "-fx-background-color: linear-gradient(to right,#fef4b7,#efc12d); " +
+        "-fx-text-fill: black; " +
+        "-fx-background-radius: 50%; " +
+        "-fx-border-color: black; " +
+        "-fx-border-width: 2px; " +
+        "-fx-border-radius: 50%;"));
+
+// สร้าง Tooltip ให้ปุ่มนี้
+Tooltip tooltip = new Tooltip("Left Click = Attack\n" +
+        "W = ↑\n" +
+        "A = ←\n" +
+        "S = ↓\n" +
+        "D = →\n" +
+        "Q = Heal\n" +
+        "E = BuffAtt\n" +
+        "R = Dash");
+Tooltip.install(btnWASD, tooltip);
+
+FXGL.getGameScene().addUINode(btnWASD);
+
         // ✅ สร้างข้อความ "HP:"
         Text hpLabel = new Text("HP: ");
         hpLabel.setTranslateX(30);
@@ -182,22 +234,27 @@ public class UIManager {
         point.setTranslateX(1050);
         point.setTranslateY(5);
 
+        bossFrame = FXGL.texture("bossgauge.png");
+        bossFrame.setTranslateX(450); // กำหนดตำแหน่ง X
+        bossFrame.setTranslateY(30); // กำหนดตำแหน่ง Y
+        bossFrame.setVisible(false); // ซ่อนภาพเริ่มต้น
+
         // ✅ สร้างพื้นหลังของแถบเลือดบอส
         bossHealthBarBackground = new Rectangle(400, 20);
-        bossHealthBarBackground.setTranslateX(440);
+        bossHealthBarBackground.setTranslateX(470);
         bossHealthBarBackground.setTranslateY(50);
         bossHealthBarBackground.setFill(Color.GRAY);
 
         // ✅ สร้างแถบเลือดบอส
         bossHealthBar = new Rectangle(400, 20);
-        bossHealthBar.setTranslateX(440);
+        bossHealthBar.setTranslateX(470);
         bossHealthBar.setTranslateY(50);
         bossHealthBar.setFill(Color.RED);
 
         // ✅ สร้างตัวเลขเลือดบอส
         bossHealthText = new Text();
-        bossHealthText.setTranslateX(580);
-        bossHealthText.setTranslateY(65);
+        bossHealthText.setTranslateX(630);
+        bossHealthText.setTranslateY(67);
         bossHealthText.setFill(Color.WHITE);
         bossHealthText.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
         bossHealthText.setVisible(false); // ซ่อนตัวเลขเลือดบอสเริ่มต้น
@@ -206,6 +263,7 @@ public class UIManager {
         FXGL.getGameScene().addUINode(bossHealthBarBackground);
         FXGL.getGameScene().addUINode(bossHealthBar);
         FXGL.getGameScene().addUINode(bossHealthText);
+        FXGL.getGameScene().addUINode(bossFrame);
 
         // ซ่อนแถบเลือดบอสเริ่มต้น
         bossHealthBar.setVisible(false);
@@ -294,12 +352,14 @@ public class UIManager {
             bossHealthBar.setVisible(false);
             bossHealthBarBackground.setVisible(false); // ซ่อนพื้นหลังของแถบเลือดบอส
             bossHealthText.setVisible(false);
+            bossFrame.setVisible(false); // ซ่อน bossFrame
             return;
         }
 
         bossHealthBar.setVisible(true);
         bossHealthBarBackground.setVisible(true); // แสดงพื้นหลังของแถบเลือดบอส
         bossHealthText.setVisible(true);
+        bossFrame.setVisible(true); // แสดง bossFrame
 
         // อัปเดตความกว้างของแถบเลือด
         double healthPercentage = (double) currentHealth / maxHealth;
@@ -313,5 +373,6 @@ public class UIManager {
         bossHealthBar.setVisible(false);
         bossHealthBarBackground.setVisible(false); // ซ่อนพื้นหลังของแถบเลือดบอส
         bossHealthText.setVisible(false);
+        bossFrame.setVisible(false); // ซ่อน bossFrame
     }
 }

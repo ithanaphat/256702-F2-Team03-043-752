@@ -22,7 +22,7 @@ public class SaveLoadManager {
             for (Point2D pos : enemyPositions) {
                 writer.write(pos.getX() + "," + pos.getY() + "\n");
             }
-            
+
             if (boss != null) {
                 writer.write(boss.getComponent(Health.class).getHealth() + "\n");
                 writer.write(boss.getX() + "\n");
@@ -55,12 +55,13 @@ public class SaveLoadManager {
                 double y = Double.parseDouble(parts[1]);
                 enemyPositions.add(new Point2D(x, y));
             }
-            
+
             int bossHealth = Integer.parseInt(line);
             double bossPosX = bossHealth == -1 ? -1 : Double.parseDouble(reader.readLine());
             double bossPosY = bossHealth == -1 ? -1 : Double.parseDouble(reader.readLine());
-            
-            return new SaveData(health, maxHealth, level, experience, attack, posX, posY, enemyPositions, bossHealth, bossPosX, bossPosY);
+
+            return new SaveData(health, maxHealth, level, experience, attack, posX, posY, enemyPositions, bossHealth,
+                    bossPosX, bossPosY);
         } catch (FileNotFoundException e) {
             FXGL.getNotificationService().pushNotification("ไม่พบไฟล์เซฟ!");
             e.printStackTrace();

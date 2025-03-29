@@ -19,6 +19,7 @@ import com.almasb.fxgl.physics.BoundingShape;
 import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.physics.PhysicsWorld;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
+import com.almasb.fxgl.time.TimerAction;
 import com.project.MonsterFactory.BossAI;
 import com.almasb.fxgl.core.math.FXGLMath;
 
@@ -33,7 +34,8 @@ public class App extends GameApplication {
     private UIManager uiManager;
     private SkillSystem skillSystem;
     private boolean bossSpawned = false;
-    private com.almasb.fxgl.time.TimerAction monsterSpawnTask;
+    private TimerAction monsterSpawnTask;  // ตัวแปรนี้จะเก็บ task สำหรับการ spawn มอนสเตอร์
+
 
     public static void main(String[] args) {
         launch(args);
@@ -444,15 +446,21 @@ protected void onUpdate(double tpf) {
     }
 
     public void startMonsterSpawnTask() {
-        if (monsterSpawnTask != null) {
-            monsterSpawnTask.expire();
-        }
-
         monsterSpawnTask = FXGL.getGameTimer().runAtInterval(() -> {
-            double x = FXGLMath.random(0, getAppWidth() - 64);
-            double y = FXGLMath.random(0, getAppHeight() - 64);
-            spawn("monster", x, y);
-        }, Duration.seconds(2));
+            // ตัวอย่างโค้ดสำหรับการ spawn มอนสเตอร์
+            spawn("monster", Math.random() * 800, Math.random() * 600); 
+        }, Duration.seconds(1)); // spawn ทุกๆ 1 วินาที
     }
+    
+    public void stopMonsterSpawnTask() {
+        if (monsterSpawnTask != null) {
+            monsterSpawnTask.expire();  // หยุดการ spawn มอนสเตอร์
+            monsterSpawnTask = null;
+        }
+    }
+    
+    
 
+    
+    
 }

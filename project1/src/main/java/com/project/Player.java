@@ -31,10 +31,8 @@ public class Player extends Entity {
                 .anchorFromCenter() // ทำให้ BBOX อยู่ตรงกลาง Entity
                 .with(physics, animationComponent, new CollidableComponent(true), new Health(health), stats) // เพิ่ม
                 .scale(0.8, 0.8) // ปรับขนาดลงครึ่งนึง
-                                                              
-                .buildAndAttach();
 
-                
+                .buildAndAttach();
 
         return player;
     }
