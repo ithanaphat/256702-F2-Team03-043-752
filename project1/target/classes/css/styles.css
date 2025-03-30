@@ -1,0 +1,55 @@
+/* สไตล์ปุ่มทั่วไป */
+.button-default {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-background-color: linear-gradient(to right, #fef4b7, #efc12d);
+    -fx-text-fill: black;
+    -fx-background-radius: 50%;
+    -fx-border-color: black;
+    -fx-border-width: 2px;
+    -fx-border-radius: 50%;
+}
+
+/* สไตล์ปุ่มเมื่อ Hover */
+.button-hover {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-background-color: linear-gradient(to right, #ecd382, #d0a10b);
+    -fx-text-fill: white;
+    -fx-background-radius: 50%;
+    -fx-border-color: white;
+    -fx-border-width: 2px;
+    -fx-border-radius: 50%;
+}
+
+/* สไตล์ปุ่มขนาดใหญ่ */
+.button-large {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-background-color: linear-gradient(to right, #fef4b7, #efc12d);
+    -fx-text-fill: black;
+    -fx-background-radius: 30;
+    -fx-border-color: black;
+    -fx-border-width: 2px;
+    -fx-border-radius: 30;
+}
+
+/* สไตล์ปุ่มขนาดใหญ่เมื่อ Hover */
+.button-large-hover {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-background-color: linear-gradient(to right, #ecd382, #d0a10b);
+    -fx-text-fill: white;
+    -fx-background-radius: 30;
+    -fx-border-color: white;
+    -fx-border-width: 2px;
+    -fx-border-radius: 30;
+}
+
+/* สไตล์ปุ่มที่ถูกปิดการใช้งาน */
+.button-disabled {
+    -fx-font-size: 24px;
+    -fx-background-color: gray;
+    -fx-text-fill: white;
+    -fx-background-radius: 30;
+}

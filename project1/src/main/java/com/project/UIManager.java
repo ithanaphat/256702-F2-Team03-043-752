@@ -43,53 +43,38 @@ public class UIManager {
     public void initUI() {
 
         // สร้างปุ่มใหม่ที่เมื่อเอาเมาส์ไปชี้จะแสดงข้อความ "wasd"
-Button btnWASD = new Button("i");
-btnWASD.setTranslateX(30); // กำหนดตำแหน่ง X ของปุ่ม
-btnWASD.setTranslateY(250); // กำหนดตำแหน่ง Y ของปุ่ม
-btnWASD.setPrefSize(50, 50); // กำหนดขนาดของปุ่ม
-btnWASD.setStyle(
-        "-fx-font-size: 18px; " +
-        "-fx-font-weight: bold; " +
-        "-fx-background-color: linear-gradient(to right,#fef4b7,#efc12d); " +
-        "-fx-text-fill: black; " +
-        "-fx-background-radius: 50%; " +
-        "-fx-border-color: black; " +
-        "-fx-border-width: 2px; " +
-        "-fx-border-radius: 50%;");
+        Button btnWASD = new Button("i");
+        btnWASD.setTranslateX(30);
+        btnWASD.setTranslateY(250);
+        btnWASD.setPrefSize(50, 50);
+        btnWASD.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
 
-// เพิ่มเอฟเฟกต์ hover
-btnWASD.setOnMouseEntered(e -> btnWASD.setStyle(
-        "-fx-font-size: 18px; " +
-        "-fx-font-weight: bold; " +
-        "-fx-background-color: linear-gradient(to right,#ecd382,#d0a10b); " +
-        "-fx-text-fill: white; " +
-        "-fx-background-radius: 50%; " +
-        "-fx-border-color: white; " +
-        "-fx-border-width: 2px; " +
-        "-fx-border-radius: 50%;"));
+        // ใช้คลาส CSS
+        btnWASD.getStyleClass().add("button-default");
 
-btnWASD.setOnMouseExited(e -> btnWASD.setStyle(
-        "-fx-font-size: 18px; " +
-        "-fx-font-weight: bold; " +
-        "-fx-background-color: linear-gradient(to right,#fef4b7,#efc12d); " +
-        "-fx-text-fill: black; " +
-        "-fx-background-radius: 50%; " +
-        "-fx-border-color: black; " +
-        "-fx-border-width: 2px; " +
-        "-fx-border-radius: 50%;"));
+        // เพิ่มเอฟเฟกต์ hover
+        btnWASD.setOnMouseEntered(e -> {
+            btnWASD.getStyleClass().remove("button-default");
+            btnWASD.getStyleClass().add("button-hover");
+        });
 
-// สร้าง Tooltip ให้ปุ่มนี้
-Tooltip tooltip = new Tooltip("Left Click = Attack\n" +
-        "W = ↑\n" +
-        "A = ←\n" +
-        "S = ↓\n" +
-        "D = →\n" +
-        "Q = Heal\n" +
-        "E = BuffAtt\n" +
-        "R = Dash");
-Tooltip.install(btnWASD, tooltip);
+        btnWASD.setOnMouseExited(e -> {
+            btnWASD.getStyleClass().remove("button-hover");
+            btnWASD.getStyleClass().add("button-default");
+        });
 
-FXGL.getGameScene().addUINode(btnWASD);
+        // สร้าง Tooltip ให้ปุ่มนี้
+        Tooltip tooltip = new Tooltip("Left Click = Attack\n" +
+                "W = ⬆\n" +
+                "A = ⬅\n" +
+                "S = ⬇\n" +
+                "D = ⮕\n" +
+                "Q = Heal\n" +
+                "E = BuffAtt\n" +
+                "R = Dash");
+        Tooltip.install(btnWASD, tooltip);
+
+        FXGL.getGameScene().addUINode(btnWASD);
 
         // ✅ สร้างข้อความ "HP:"
         Text hpLabel = new Text("HP: ");
@@ -158,81 +143,70 @@ FXGL.getGameScene().addUINode(btnWASD);
         pointsText.setStyle("-fx-font-size: 25px; -fx-font-weight: bold;");
 
         // ✅ สร้างปุ่มอัพเกรด HP
-        btnUpgradeHP = new Button("HP");
+
+        btnUpgradeHP = new Button("⬆HP");
         btnUpgradeHP.setTranslateX(30);
         btnUpgradeHP.setTranslateY(100);
-        btnUpgradeHP.setPrefSize(70, 50);
-        btnUpgradeHP.setStyle(
-                "-fx-font-size: 18px; " +
-                        "-fx-font-weight: bold; " +
-                        "-fx-background-color: linear-gradient(to right,#fef4b7,#efc12d); " +
-                        "-fx-text-fill: black; " +
-                        "-fx-background-radius: 50%; " +
-                        "-fx-border-color: black; " +
-                        "-fx-border-width: 2px; " +
-                        "-fx-border-radius: 50%;");
-        btnUpgradeHP.setOnMouseEntered(e -> btnUpgradeHP.setStyle(
-                "-fx-font-size: 18px; " +
-                        "-fx-font-weight: bold; " +
-                        "-fx-background-color: linear-gradient(to right,#ecd382,#d0a10b); " +
-                        "-fx-text-fill: white; " +
-                        "-fx-background-radius: 50%; " +
-                        "-fx-border-color: white; " +
-                        "-fx-border-width: 2px; " +
-                        "-fx-border-radius: 50%;"));
-        btnUpgradeHP.setOnMouseExited(e -> btnUpgradeHP.setStyle(
-                "-fx-font-size: 18px; " +
-                        "-fx-font-weight: bold; " +
-                        "-fx-background-color: linear-gradient(to right,#fef4b7,#efc12d); " +
-                        "-fx-text-fill: black; " +
-                        "-fx-background-radius: 50%; " +
-                        "-fx-border-color: black; " +
-                        "-fx-border-width: 2px; " +
-                        "-fx-border-radius: 50%;"));
+        btnUpgradeHP.setPrefSize(90, 60);
+        btnUpgradeHP.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+
+        // ใช้คลาส CSS
+        btnUpgradeHP.getStyleClass().add("button-default");
+
+        // เพิ่มเอฟเฟกต์ hover
+        btnUpgradeHP.setOnMouseEntered(e -> {
+            btnUpgradeHP.getStyleClass().remove("button-default");
+            btnUpgradeHP.getStyleClass().add("button-hover");
+        });
+
+        btnUpgradeHP.setOnMouseExited(e -> {
+            btnUpgradeHP.getStyleClass().remove("button-hover");
+            btnUpgradeHP.getStyleClass().add("button-default");
+        });
+
         btnUpgradeHP.setOnAction(e -> upgradeHP());
 
+        // เพิ่ม Tooltip ให้กับ btnUpgradeHP
+        Tooltip hpTooltip = new Tooltip("เพิ่มค่า HP วินาทีละ 10% จากHP สูงสุด");
+        Tooltip.install(btnUpgradeHP, hpTooltip);
+
         // ✅ สร้างปุ่มอัพเกรด Attack
-        btnUpgradeAttack = new Button("ATK");
+
+        btnUpgradeAttack = new Button("⬆ATK");
         btnUpgradeAttack.setTranslateX(30);
         btnUpgradeAttack.setTranslateY(170);
-        btnUpgradeAttack.setPrefSize(70, 50);
-        btnUpgradeAttack.setStyle(
-                "-fx-font-size: 18px; " +
-                        "-fx-font-weight: bold; " +
-                        "-fx-background-color: linear-gradient(to right,#fef4b7,#efc12d); " +
-                        "-fx-text-fill: black; " +
-                        "-fx-background-radius: 50%; " +
-                        "-fx-border-color: black; " +
-                        "-fx-border-width: 2px; " +
-                        "-fx-border-radius: 50%;");
-        btnUpgradeAttack.setOnMouseEntered(e -> btnUpgradeAttack.setStyle(
-                "-fx-font-size: 18px; " +
-                        "-fx-font-weight: bold; " +
-                        "-fx-background-color: linear-gradient(to right,#ecd382,#d0a10b); " +
-                        "-fx-text-fill: white; " +
-                        "-fx-background-radius: 50%; " +
-                        "-fx-border-color: white; " +
-                        "-fx-border-width: 2px; " +
-                        "-fx-border-radius: 50%;"));
-        btnUpgradeAttack.setOnMouseExited(e -> btnUpgradeAttack.setStyle(
-                "-fx-font-size: 18px; " +
-                        "-fx-font-weight: bold; " +
-                        "-fx-background-color: linear-gradient(to right,#fef4b7,#efc12d); " +
-                        "-fx-text-fill: black; " +
-                        "-fx-background-radius: 50%; " +
-                        "-fx-border-color: black; " +
-                        "-fx-border-width: 2px; " +
-                        "-fx-border-radius: 50%;"));
+        btnUpgradeAttack.setPrefSize(90, 60);
+        btnUpgradeAttack.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+
+        // ใช้คลาส CSS
+        btnUpgradeAttack.getStyleClass().add("button-default");
+
+        // เพิ่มเอฟเฟกต์ hover
+        btnUpgradeAttack.setOnMouseEntered(e -> {
+            btnUpgradeAttack.getStyleClass().remove("button-default");
+            btnUpgradeAttack.getStyleClass().add("button-hover");
+        });
+
+        btnUpgradeAttack.setOnMouseExited(e -> {
+            btnUpgradeAttack.getStyleClass().remove("button-hover");
+            btnUpgradeAttack.getStyleClass().add("button-default");
+        });
+
         btnUpgradeAttack.setOnAction(e -> upgradeAttack());
 
-        ImageView hpFrame = FXGL.texture("test.png");
-        ImageView point = FXGL.texture("point.png");
+        // เพิ่ม Tooltip ให้กับ btnUpgradeAttack
+        Tooltip attackTooltip = new Tooltip("เพิ่มค่าพลังโจมตี 1");
+        Tooltip.install(btnUpgradeAttack, attackTooltip);
 
+        ImageView hpFrame = FXGL.texture("test.png");
         hpFrame.setTranslateX(10); // กำหนดตำแหน่ง X ของรูปภาพ
         hpFrame.setTranslateY(5); // กำหนดตำแหน่ง Y ของรูปภาพ
 
+        ImageView point = FXGL.texture("point.png");
         point.setTranslateX(1050);
         point.setTranslateY(5);
+        Tooltip pointTooltip = new Tooltip("Points: ใช้สำหรับอัพเกรดค่าต่าง ๆ เช่น HP และ Attack");
+        Tooltip.install(point, pointTooltip);
 
         bossFrame = FXGL.texture("bossgauge.png");
         bossFrame.setTranslateX(450); // กำหนดตำแหน่ง X

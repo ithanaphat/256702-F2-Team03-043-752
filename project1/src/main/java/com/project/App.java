@@ -20,10 +20,8 @@ import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.physics.PhysicsWorld;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
 import com.almasb.fxgl.time.TimerAction;
-import com.project.MonsterFactory.BossAI;
 import com.almasb.fxgl.core.math.FXGLMath;
 
-import javafx.geometry.Point2D;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
@@ -449,7 +447,7 @@ protected void onUpdate(double tpf) {
         monsterSpawnTask = FXGL.getGameTimer().runAtInterval(() -> {
             // ตัวอย่างโค้ดสำหรับการ spawn มอนสเตอร์
             spawn("monster", Math.random() * 800, Math.random() * 600); 
-        }, Duration.seconds(1)); // spawn ทุกๆ 1 วินาที
+        }, Duration.seconds(2)); // spawn ทุกๆ 1 วินาที
     }
     
     public void stopMonsterSpawnTask() {

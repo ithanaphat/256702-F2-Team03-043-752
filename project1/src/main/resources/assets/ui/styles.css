@@ -1,0 +1,94 @@
+/* General Button Styling */
+.button {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-background-color: linear-gradient(to right, #fef4b7, #efc12d);
+    -fx-text-fill: black;
+    -fx-background-radius: 30;
+    -fx-border-color: black;
+    -fx-border-width: 2px;
+    -fx-border-radius: 30;
+}
+
+.button:hover {
+    -fx-background-color: linear-gradient(to right, #ecd382, #d0a10b);
+    -fx-text-fill: white;
+    -fx-border-color: white;
+}
+
+/* Disabled Button Styling */
+.button:disabled {
+    -fx-background-color: gray;
+    -fx-text-fill: white;
+}
+
+/* Circular Button Styling */
+.circular-button {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-background-color: linear-gradient(to right, #fef4b7, #efc12d);
+    -fx-text-fill: black;
+    -fx-background-radius: 50%;
+    -fx-border-color: black;
+    -fx-border-width: 2px;
+    -fx-border-radius: 50%;
+}
+
+.circular-button:hover {
+    -fx-background-color: linear-gradient(to right, #ecd382, #d0a10b);
+    -fx-text-fill: white;
+    -fx-border-color: white;
+}
+
+/* Title Styling */
+.title {
+    -fx-font-size: 48px;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+/* Tooltip Styling */
+.tooltip {
+    -fx-font-size: 14px;
+    -fx-background-color: #333;
+    -fx-text-fill: white;
+    -fx-padding: 5px;
+    -fx-border-color: white;
+    -fx-border-width: 1px;
+}
+
+/* Health Bar Styling */
+.health-bar {
+    -fx-fill: red;
+}
+
+.health-bar-background {
+    -fx-fill: gray;
+}
+
+/* Level Bar Styling */
+.level-bar {
+    -fx-fill: linear-gradient(to right, green, yellow);
+}
+
+.level-bar-background {
+    -fx-fill: gray;
+    -fx-stroke: black;
+    -fx-stroke-width: 3;
+}
+
+/* Boss Health Bar Styling */
+.boss-health-bar {
+    -fx-fill: red;
+}
+
+.boss-health-bar-background {
+    -fx-fill: gray;
+}
+
+/* Text Styling */
+.text {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-fill: white;
+}

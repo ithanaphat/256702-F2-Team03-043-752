@@ -3,7 +3,6 @@ package com.project;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import javafx.geometry.Point2D;
-import com.almasb.fxgl.entity.SpawnData;
 
 import static com.almasb.fxgl.dsl.FXGL.spawn;
 

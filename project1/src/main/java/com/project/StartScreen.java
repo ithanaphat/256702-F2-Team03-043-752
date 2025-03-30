@@ -3,7 +3,7 @@ package com.project;
 import com.almasb.fxgl.app.scene.FXGLMenu;
 import com.almasb.fxgl.app.scene.MenuType;
 import com.almasb.fxgl.dsl.FXGL;
-import com.almasb.fxgl.ui.FXGLButton;
+import javafx.scene.control.Button;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -28,15 +28,15 @@ public class StartScreen extends FXGLMenu {
         title.setStyle("-fx-font-size: 48px; -fx-text-fill: white; -fx-font-weight: bold;");
 
         // ปุ่มเริ่มเกม
-        FXGLButton btnStart = createStyledButton("New Game");
+        Button btnStart = createStyledButton("New Game");
         btnStart.setOnAction(e -> fireNewGame());
 
         // ปุ่ม Load Game
-        FXGLButton btnLoad = createStyledButton("Load Game");
+        Button btnLoad = createStyledButton("Load Game");
         if (!new File(SaveLoadManager.SAVE_FILE).exists()) {
+            btnLoad.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
             btnLoad.setDisable(true);
-            btnLoad.setStyle(
-                    "-fx-font-size: 24px; -fx-background-color: gray; -fx-text-fill: white; -fx-background-radius: 30;");
+            btnLoad.getStyleClass().add("button-disabled");
         } else {
             btnLoad.setOnAction(e -> {
                 SaveData data = SaveLoadManager.loadGame();
@@ -48,7 +48,7 @@ public class StartScreen extends FXGLMenu {
         }
 
         // ปุ่มออกจากเกม
-        FXGLButton btnExit = createStyledButton("Exit");
+        Button btnExit = createStyledButton("Exit");
         btnExit.setOnAction(e -> fireExit());
 
         // จัดวาง UI
@@ -61,38 +61,24 @@ public class StartScreen extends FXGLMenu {
         getContentRoot().getChildren().addAll(bg, menuBox);
     }
 
-    private FXGLButton createStyledButton(String text) {
-        FXGLButton button = new FXGLButton(text);
+    private Button createStyledButton(String text) {
+        Button button = new Button(text);
         button.setPrefSize(300, 70);
-        button.setStyle(
-                "-fx-font-size: 24px; " +
-                        "-fx-font-weight: bold; " +
-                        "-fx-background-color: linear-gradient(to right,#fef4b7,#efc12d); " +
-                        "-fx-text-fill: black; " +
-                        "-fx-background-radius: 30;" +
-                        "-fx-border-color: black; " +
-                        "-fx-border-width: 2px; " +
-                        "-fx-border-radius: 30;");
+        button.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
 
-        // Add hover effect
-        button.setOnMouseEntered(e -> button.setStyle(
-                "-fx-font-size: 24px; " +
-                        "-fx-font-weight: bold; " +
-                        "-fx-background-color: linear-gradient(to right,#ecd382,#d0a10b); " +
-                        "-fx-text-fill: white; " +
-                        "-fx-background-radius: 30;" +
-                        "-fx-border-color: white; " +
-                        "-fx-border-width: 2px; " +
-                        "-fx-border-radius: 30;"));
-        button.setOnMouseExited(e -> button.setStyle(
-                "-fx-font-size: 24px; " +
-                        "-fx-font-weight: bold; " +
-                        "-fx-background-color: linear-gradient(to right,#fef4b7,#efc12d); " +
-                        "-fx-text-fill: black; " +
-                        "-fx-background-radius: 30;" +
-                        "-fx-border-color: black; " +
-                        "-fx-border-width: 2px; " +
-                        "-fx-border-radius: 30;"));
+        // ใช้คลาส CSS
+        button.getStyleClass().add("button-large");
+
+        // เพิ่มเอฟเฟกต์ hover
+        button.setOnMouseEntered(e -> {
+            button.getStyleClass().remove("button-large");
+            button.getStyleClass().add("button-large-hover");
+        });
+
+        button.setOnMouseExited(e -> {
+            button.getStyleClass().remove("button-large-hover");
+            button.getStyleClass().add("button-large");
+        });
 
         return button;
     }

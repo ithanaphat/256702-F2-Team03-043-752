@@ -76,38 +76,25 @@ public class PauseMenu extends FXGLMenu {
 
     // ✅ ฟังก์ชันสร้างปุ่มที่มีสไตล์
     private Button createStyledButton(String text) {
+
         Button button = new Button(text);
-        button.setPrefSize(250, 60); // ปรับขนาดปุ่ม
-        button.setStyle(
-                "-fx-font-size: 24px; " +
-                        "-fx-font-weight: bold; " +
-                        "-fx-background-color: linear-gradient(to right,#fef4b7,#efc12d); " + // สีฟ้าไล่สี
-                        "-fx-text-fill: black; " +
-                        "-fx-background-radius: 30;" + // ทำให้ปุ่มโค้งมน
-                        "-fx-border-color: black; " +
-                        "-fx-border-width: 2px; " +
-                        "-fx-border-radius: 30;");
+        button.setPrefSize(250, 60);
+        button.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
 
-        // ✅ เอฟเฟกต์ Hover (เปลี่ยนสีปุ่มเมื่อเอาเม้าส์ไปชี้)
-        button.setOnMouseEntered(e -> button.setStyle(
-                "-fx-font-size: 24px; " +
-                        "-fx-font-weight: bold; " +
-                        "-fx-background-color: linear-gradient(to right,#ecd382,#d0a10b); " + // ฟ้าอ่อนขึ้น
-                        "-fx-text-fill: white; " +
-                        "-fx-background-radius: 30;" +
-                        "-fx-border-color: white; " +
-                        "-fx-border-width: 2px; " +
-                        "-fx-border-radius: 30;"));
 
-        button.setOnMouseExited(e -> button.setStyle(
-                "-fx-font-size: 24px; " +
-                        "-fx-font-weight: bold; " +
-                        "-fx-background-color: linear-gradient(to right,#fef4b7,#efc12d); " +
-                        "-fx-text-fill: black; " +
-                        "-fx-background-radius: 30;" +
-                        "-fx-border-color: black; " +
-                        "-fx-border-width: 2px; " +
-                        "-fx-border-radius: 30;"));
+        // ใช้คลาส CSS
+        button.getStyleClass().add("button-large");
+
+        // เอฟเฟกต์ Hover
+        button.setOnMouseEntered(e -> {
+            button.getStyleClass().remove("button-large");
+            button.getStyleClass().add("button-large-hover");
+        });
+
+        button.setOnMouseExited(e -> {
+            button.getStyleClass().remove("button-large-hover");
+            button.getStyleClass().add("button-large");
+        });
 
         return button;
     }
