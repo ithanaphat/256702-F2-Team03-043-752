@@ -167,7 +167,7 @@ public class UIManager {
         btnUpgradeHP.setOnAction(e -> upgradeHP());
 
         // เพิ่ม Tooltip ให้กับ btnUpgradeHP
-        Tooltip hpTooltip = new Tooltip("เพิ่มค่า HP วินาทีละ 10% จากHP สูงสุด");
+        Tooltip hpTooltip = new Tooltip("เพิ่มค่า HP 10 หน่วย");
         Tooltip.install(btnUpgradeHP, hpTooltip);
 
         // ✅ สร้างปุ่มอัพเกรด Attack
