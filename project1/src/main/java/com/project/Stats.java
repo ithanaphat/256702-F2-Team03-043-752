@@ -139,6 +139,6 @@ public class Stats extends Component {
 
     int getExperienceForNextLevel() {
         int currentLevel = level.get();
-        return (int) Math.pow(1.3, currentLevel) * 10; // Exponential progression
+        return (int) Math.pow(1.1, currentLevel) * 10; // Exponential progression
     }
 }

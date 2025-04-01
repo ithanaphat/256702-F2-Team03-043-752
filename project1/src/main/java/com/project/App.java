@@ -19,7 +19,6 @@ import com.almasb.fxgl.physics.BoundingShape;
 import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.physics.PhysicsWorld;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
-import com.almasb.fxgl.time.TimerAction;
 import com.almasb.fxgl.core.math.FXGLMath;
 
 import javafx.scene.input.KeyCode;
@@ -32,8 +31,7 @@ public class App extends GameApplication {
     private UIManager uiManager;
     private SkillSystem skillSystem;
     private boolean bossSpawned = false;
-    private TimerAction monsterSpawnTask;  // ตัวแปรนี้จะเก็บ task สำหรับการ spawn มอนสเตอร์
-
+    private double spawnTimer = 0; // ตัวจับเวลา
 
     public static void main(String[] args) {
         launch(args);
@@ -194,7 +192,7 @@ public class App extends GameApplication {
                 Entity player = getGameWorld().getSingleton(EntityType.PLAYER);
                 Animation anim = player.getComponent(Animation.class);
                 anim.attack(); // เรียกใช้เมธอด attack
-        
+
                 // หา Monster ที่ใกล้ที่สุด
                 Entity nearestMonster = getGameWorld().getEntitiesByType(EntityType.MONSTER).stream()
                         .min((m1, m2) -> {
@@ -203,7 +201,7 @@ public class App extends GameApplication {
                             return Double.compare(d1, d2);
                         })
                         .orElse(null);
-        
+
                 // หา Boss ที่ใกล้ที่สุด
                 Entity nearestBoss = getGameWorld().getEntitiesByType(EntityType.BOSS).stream()
                         .min((b1, b2) -> {
@@ -212,55 +210,54 @@ public class App extends GameApplication {
                             return Double.compare(d1, d2);
                         })
                         .orElse(null);
-        
+
                 // ถ้าเจอมอนสเตอร์ที่อยู่ในระยะ ให้ลดพลังชีวิต
                 if (nearestMonster != null && player.getPosition().distance(nearestMonster.getPosition()) < 80) {
                     Health health = nearestMonster.getComponent(Health.class);
                     int attackPower = stats.getAttack(); // ดึงค่าพลังโจมตีของผู้เล่น
                     health.damage(attackPower); // ✅ ลดพลังชีวิตของมอนสเตอร์
-        
+
                     // ถ้าพลังชีวิตหมด ให้ลบมอนสเตอร์ออกจากเกม
                     if (health.getHealth() <= 0) {
                         // Trigger death effect
                         Animation.playEffect(nearestMonster.getPosition(), Color.BLACK, Color.BLACK);
-        
+
                         nearestMonster.removeFromWorld();
-        
+
                         // เพิ่มค่า experience ให้กับผู้เล่น
                         Stats playerStats = FXGL.geto("playerStats");
                         int expReward = nearestMonster.getInt("expReward");
                         playerStats.addExperience(expReward);
-        
+
                         // อัปเดต UI
                         UIManager uiManager = FXGL.geto("uiManager");
                         uiManager.updateHealthDisplay();
                     }
                 }
-        
+
                 // ถ้าเจอบอสที่อยู่ในระยะ ให้ลดพลังชีวิต
                 if (nearestBoss != null && player.getPosition().distance(nearestBoss.getPosition()) < 80) {
                     Health health = nearestBoss.getComponent(Health.class);
                     int attackPower = stats.getAttack(); // ดึงค่าพลังโจมตีของผู้เล่น
                     health.damage(attackPower); // ✅ ลดพลังชีวิตของบอส
-        
+
                     // ถ้าพลังชีวิตหมด ให้ลบบอสออกจากเกม
+
                     if (health.getHealth() <= 0) {
-                        // Trigger death effect
-                        Animation.playEffect(nearestBoss.getPosition(), Color.BLACK, Color.BLACK);
-        
+
                         nearestBoss.removeFromWorld();
-        
+
                         // ซ่อนแถบเลือดบอส
                         UIManager uiManager = FXGL.geto("uiManager");
                         uiManager.hideBossUI();
-        
+
                         // เพิ่มค่า experience ให้กับผู้เล่น
                         Stats playerStats = FXGL.geto("playerStats");
                         int expReward = nearestBoss.getInt("expReward");
                         playerStats.addExperience(expReward);
 
                         // แสดงหน้าจอชัยชนะ
-    FXGL.getSceneService().pushSubScene(new VictoryScreen());
+                        FXGL.getSceneService().pushSubScene(new VictoryScreen());
                     }
                 }
             }
@@ -305,29 +302,16 @@ public class App extends GameApplication {
     protected void initGame() {
 
         // ล้างสถานะของเกม
-    bossSpawned = false;
+        bossSpawned = false;
 
-   
+        // ใช้ FXGL.runOnce เพื่อหยุดเพลงทั้งหมดหลังจากการลบเอนทิตีเสร็จสิ้น
+        FXGL.runOnce(() -> {
+            FXGL.getAudioPlayer().stopAllMusic();
 
-    if (monsterSpawnTask != null) {
-        monsterSpawnTask.expire();
-        monsterSpawnTask = null;
-    }
-
-    // ลบเอนทิตีทั้งหมดใน GameWorld
-    getGameWorld().getEntitiesCopy().forEach(Entity::removeFromWorld);
-
-
-// ใช้ FXGL.runOnce เพื่อหยุดเพลงทั้งหมดหลังจากการลบเอนทิตีเสร็จสิ้น
-FXGL.runOnce(() -> {
-    FXGL.getAudioPlayer().stopAllMusic();
-
-    // เล่นเพลงพื้นหลังเริ่มต้น
-    FXGL.getAudioPlayer().loopMusic(FXGL.getAssetLoader().loadMusic("background.mp3"));
-    FXGL.getSettings().setGlobalMusicVolume(0.5); // ตั้งค่าเสียงเพลงเริ่มต้น
-}, Duration.seconds(0.1));
-
-
+            // เล่นเพลงพื้นหลังเริ่มต้น
+            FXGL.getAudioPlayer().loopMusic(FXGL.getAssetLoader().loadMusic("background.mp3"));
+            FXGL.getSettings().setGlobalMusicVolume(0.5); // ตั้งค่าเสียงเพลงเริ่มต้น
+        }, Duration.seconds(0.1));
 
         FXGL.getInput().clearAll(); // ✅ ล้าง Input ที่มีอยู่ก่อนเริ่มเกมใหม่
 
@@ -342,7 +326,7 @@ FXGL.runOnce(() -> {
         // ส่งรูปไปในanimation
         Player player = new Player("playerimage.png");
         // สร้างผู้เล่น
-        Entity playerEntity = player.createPlayer(200, 0, 2, 1);
+        Entity playerEntity = player.createPlayer(200, 0, 2, 30);
         // สร้างstats
         stats = player.getStats(); // ดึง Stats จาก Player
         FXGL.set("playerStats", stats);
@@ -367,13 +351,7 @@ FXGL.runOnce(() -> {
 
         getGameWorld().addEntityFactory(new MonsterFactory());
 
-        monsterSpawnTask = FXGL.getGameTimer().runAtInterval(() -> {
-            double x = FXGLMath.random(0, getAppWidth() - 64);
-            double y = FXGLMath.random(0, getAppHeight() - 64);
-            spawn("monster", x, y);
-        }, Duration.seconds(2));
-
-
+      
 
     }
 
@@ -383,52 +361,57 @@ FXGL.runOnce(() -> {
     }
 
     @Override
-protected void onUpdate(double tpf) {
-    super.onUpdate(tpf);
+    protected void onUpdate(double tpf) {
+        super.onUpdate(tpf);
 
-    // ตรวจสอบว่า HP ของผู้เล่นหมดหรือไม่
-    if (stats.getHealth() <= 0) {
-        FXGL.getSceneService().pushSubScene(new DeathScreen());
-        return;
-    }
+        // เพิ่มเวลาในตัวจับเวลา
+        spawnTimer += tpf;
 
-    // ตรวจสอบเลเวลของผู้เล่น
-    if (!bossSpawned && stats.getLevel() >= 30) {
-        bossSpawned = true;
-
-        // หยุด spawn มอนสเตอร์ทั่วไป
-        if (monsterSpawnTask != null) {
-            monsterSpawnTask.expire();
-            monsterSpawnTask = null; // ตั้งค่าเป็น null เพื่อป้องกันการเรียกใช้ซ้ำ
+        // ถ้าผ่านไป 3 วินาที ให้เรียกมอนสเตอร์
+        if (spawnTimer >= 3) {
+            for (int i = 0; i < 2; i++) {
+                double x = FXGLMath.random(50, getAppWidth() - 50);
+                double y = FXGLMath.random(50, getAppHeight() - 50);
+                spawn("monster", x, y);
+            }
+            spawnTimer = 0; // รีเซ็ตตัวจับเวลา
         }
 
-        // เปลี่ยนเพลงเมื่อถึงเลเวล 30
-        FXGL.getAudioPlayer().stopAllMusic(); // หยุดเพลงเก่า
-        FXGL.getAudioPlayer().loopMusic(FXGL.getAssetLoader().loadMusic("background_boss.mp3")); // เล่นเพลงใหม่
+        // ตรวจสอบว่า HP ของผู้เล่นหมดหรือไม่
+        if (stats.getHealth() <= 0) {
+            FXGL.getSceneService().pushSubScene(new DeathScreen());
+            return;
+        }
 
-        // เรียกบอสออกมา
-        double x = FXGLMath.random(0, getAppWidth() - 128);
-        double y = FXGLMath.random(0, getAppHeight() - 128);
-        Entity boss = spawn("boss", x, y);
+        // ตรวจสอบเลเวลของผู้เล่น
+        if (!bossSpawned && stats.getLevel() >= 30) {
+            bossSpawned = true;
 
-        // อัปเดต UI เลือดบอส
-        Health bossHealth = boss.getComponent(Health.class);
-        UIManager uiManager = FXGL.geto("uiManager");
-        uiManager.updateBossUI(bossHealth.getHealth(), 200); // 200 คือ Max HP ของบอส
+            // เปลี่ยนเพลงเมื่อถึงเลเวล 30
+            FXGL.getAudioPlayer().stopAllMusic(); // หยุดเพลงเก่า
+            FXGL.getAudioPlayer().loopMusic(FXGL.getAssetLoader().loadMusic("background_boss.mp3")); // เล่นเพลงใหม่
+
+            // เรียกบอสออกมา
+            Entity boss = spawn("boss", 700, 150);
+
+            // อัปเดต UI เลือดบอส
+            Health bossHealth = boss.getComponent(Health.class);
+            UIManager uiManager = FXGL.geto("uiManager");
+            uiManager.updateBossUI(bossHealth.getHealth(), 500); // 500 คือ Max HP ของบอส
+        }
+
+        // อัปเดต UI เลือดบอสระหว่างเกม
+        Entity boss = getGameWorld().getEntitiesByType(EntityType.BOSS).stream().findFirst().orElse(null);
+        if (boss != null) {
+            Health bossHealth = boss.getComponent(Health.class);
+            UIManager uiManager = FXGL.geto("uiManager");
+            uiManager.updateBossUI(bossHealth.getHealth(), 500); // 200 คือ Max HP ของบอส
+        } else {
+            // ซ่อน UI หากไม่มีบอส
+            UIManager uiManager = FXGL.geto("uiManager");
+            uiManager.hideBossUI();
+        }
     }
-
-    // อัปเดต UI เลือดบอสระหว่างเกม
-    Entity boss = getGameWorld().getEntitiesByType(EntityType.BOSS).stream().findFirst().orElse(null);
-    if (boss != null) {
-        Health bossHealth = boss.getComponent(Health.class);
-        UIManager uiManager = FXGL.geto("uiManager");
-        uiManager.updateBossUI(bossHealth.getHealth(), 200); // 200 คือ Max HP ของบอส
-    } else {
-        // ซ่อน UI หากไม่มีบอส
-        UIManager uiManager = FXGL.geto("uiManager");
-        uiManager.hideBossUI();
-    }
-}
 
     protected FXGLMenu getMainMenu() {
 
@@ -443,22 +426,4 @@ protected void onUpdate(double tpf) {
         this.bossSpawned = bossSpawned;
     }
 
-    public void startMonsterSpawnTask() {
-        monsterSpawnTask = FXGL.getGameTimer().runAtInterval(() -> {
-            // ตัวอย่างโค้ดสำหรับการ spawn มอนสเตอร์
-            spawn("monster", Math.random() * 800, Math.random() * 600); 
-        }, Duration.seconds(2)); // spawn ทุกๆ 1 วินาที
-    }
-    
-    public void stopMonsterSpawnTask() {
-        if (monsterSpawnTask != null) {
-            monsterSpawnTask.expire();  // หยุดการ spawn มอนสเตอร์
-            monsterSpawnTask = null;
-        }
-    }
-    
-    
-
-    
-    
 }

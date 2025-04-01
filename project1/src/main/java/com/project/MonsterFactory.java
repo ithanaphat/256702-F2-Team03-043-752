@@ -13,14 +13,21 @@ import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
 
 import javafx.geometry.Point2D;
 
-
 import static com.almasb.fxgl.dsl.FXGL.*;
 
 import com.almasb.fxgl.dsl.FXGL;
 
 public class MonsterFactory implements EntityFactory {
+    
+
     @Spawns("monster")
     public Entity newMonster(SpawnData data) {
+
+
+        FXGL.getAssetLoader().loadTexture("en1.png");
+        FXGL.getAssetLoader().loadTexture("en2.png");
+        FXGL.getAssetLoader().loadTexture("en3.png");
+
         PhysicsComponent physics = new PhysicsComponent();
         physics.setBodyType(BodyType.DYNAMIC);
 
@@ -36,9 +43,7 @@ public class MonsterFactory implements EntityFactory {
         Entity monster = entityBuilder()
                 .type(EntityType.MONSTER)
                 .at(data.getX(), data.getY())
-                .viewWithBBox(monsterImage)
-
-                .bbox(new HitBox("Body", BoundingShape.box(32, 32)))
+                .viewWithBBox(FXGL.getAssetLoader().loadTexture(monsterImage))
                 .bbox(new HitBox("Body", new Point2D(12, 14), BoundingShape.box(50, 50)))
                 .with(new CollidableComponent(true), physics, new Health(monsterHealth))
                 .scale(0.8, 0.8) // ปรับขนาดลงครึ่งนึง
@@ -65,6 +70,8 @@ public class MonsterFactory implements EntityFactory {
             var players = getGameWorld().getEntitiesByType(EntityType.PLAYER);
 
             if (!players.isEmpty()) {
+
+                
                 Entity player = players.get(0);
                 Point2D monsterPos = entity.getPosition();
                 Point2D playerPos = player.getPosition();
@@ -85,33 +92,32 @@ public class MonsterFactory implements EntityFactory {
     }
 
     @Spawns("boss")
-public Entity newBoss(SpawnData data) {
-    PhysicsComponent physics = new PhysicsComponent();
-    physics.setBodyType(BodyType.DYNAMIC);
+    public Entity newBoss(SpawnData data) {
+        PhysicsComponent physics = new PhysicsComponent();
+        physics.setBodyType(BodyType.DYNAMIC);
 
-    int bossHealth = 200;
-    int bossDamage = 50;
-    int bossExp = 100;
+        int bossHealth = 500;
+        int bossDamage = 100;
+        int bossExp = 100;
 
-    Entity boss = entityBuilder()
-            .type(EntityType.BOSS)
-            .at(data.getX(), data.getY())
-            .bbox(new HitBox("Body", new Point2D(0, 0), BoundingShape.box(32, 32))) // ปรับตำแหน่ง HitBox
-            .with(new CollidableComponent(true), physics, new Health(bossHealth))
-            .with(new BossAnimation("boss.png")) // เพิ่มคอมโพเนนต์แอนิเมชันของบอส
-            .build();
+        Entity boss = entityBuilder()
+                .type(EntityType.BOSS)
+                .at(data.getX(), data.getY())
+                .bbox(new HitBox("Body", new Point2D(0, 0), BoundingShape.box(32, 32))) // ปรับตำแหน่ง HitBox
+                .with(new CollidableComponent(true), physics, new Health(bossHealth))
+                .with(new BossAnimation("boss.png")) // เพิ่มคอมโพเนนต์แอนิเมชันของบอส
+                .build();
 
-    boss.setProperty("expReward", bossExp);
-    boss.setProperty("damage", bossDamage);
+        boss.setProperty("expReward", bossExp);
+        boss.setProperty("damage", bossDamage);
 
-    boss.addComponent(new BossAI(physics, boss.getComponent(BossAnimation.class)));
+        boss.addComponent(new BossAI(physics, boss.getComponent(BossAnimation.class)));
 
-    // ตั้งค่าจุดหมุน (Pivot) เพื่อป้องกันการเลื่อนของ HitBox
-    boss.getTransformComponent().setScaleOrigin(new Point2D(32, 32)); // จุดหมุนตรงกลาง HitBox
+        // ตั้งค่าจุดหมุน (Pivot) เพื่อป้องกันการเลื่อนของ HitBox
+        boss.getTransformComponent().setScaleOrigin(new Point2D(32, 32)); // จุดหมุนตรงกลาง HitBox
 
-
-    return boss;
-}
+        return boss;
+    }
 
     public static class BossAI extends Component {
         private final PhysicsComponent physics;
@@ -124,7 +130,6 @@ public Entity newBoss(SpawnData data) {
             this.physics = physics;
             this.bossAnimation = bossAnimation;
 
-            
         }
 
         @Override
@@ -155,21 +160,20 @@ public Entity newBoss(SpawnData data) {
                 bossAnimation.setSpeedY((int) (direction.getY() * SPEED));
 
                 // Flip the boss texture based on the player's position
-            if (playerPos.getX() < bossPos.getX()) {
-                entity.setScaleX(-2); // Flip to face left
-            } else {
-                entity.setScaleX(2); // Face right
-            }
+                if (playerPos.getX() < bossPos.getX()) {
+                    entity.setScaleX(-2); // Flip to face left
+                } else {
+                    entity.setScaleX(2); // Face right
+                }
 
             }
         }
 
-        
     }
 
     private int calculateMonsterHealth(int playerLevel) {
         if (playerLevel >= 20)
-            return 80;
+            return 100;
         else if (playerLevel >= 10)
             return 50;
         else
@@ -178,18 +182,18 @@ public Entity newBoss(SpawnData data) {
 
     private int calculateMonsterExp(int playerLevel) {
         if (playerLevel >= 20)
-            return 50000;
+            return 100;
         else if (playerLevel >= 10)
-            return 25000;
+            return 60;
         else
-            return 5000;
+            return 30;
     }
 
     private int calculateMonsterDamage(int playerLevel) {
         if (playerLevel >= 20)
-            return 30;
+            return 80;
         else if (playerLevel >= 10)
-            return 20;
+            return 40;
         else
             return 10;
     }

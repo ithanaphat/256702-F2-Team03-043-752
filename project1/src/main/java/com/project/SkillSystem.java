@@ -96,7 +96,6 @@ public class SkillSystem {
         for (int i = 0; i < healTicks; i++) {
             runOnce(() -> {
                 stats.heal(healAmount);
-                System.out.println("Healed for " + healAmount + " health.");
                 // Update the UI after healing
                 UIManager uiManager = FXGL.geto("uiManager");
                 uiManager.updateHealthDisplay();

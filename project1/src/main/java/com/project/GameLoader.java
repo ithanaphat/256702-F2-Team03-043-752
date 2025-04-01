@@ -61,12 +61,7 @@ public class GameLoader {
             FXGL.getAudioPlayer().loopMusic(FXGL.getAssetLoader().loadMusic("background.mp3"));
         }
     
-        // ตรวจสอบว่าเลเวล 30 แล้วต้องหยุด spawn มอนสเตอร์
-        if (stats.getLevel() >= 30) {
-            ((App) FXGL.getApp()).stopMonsterSpawnTask(); // หยุดการ spawn มอนสเตอร์เมื่อเลเวลถึง 30
-        } else {
-            ((App) FXGL.getApp()).startMonsterSpawnTask(); // เริ่ม spawn มอนสเตอร์หากยังไม่ถึงเลเวล 30
-        }
+        
     
         FXGL.getNotificationService().pushNotification("Game Loaded!");
         FXGL.<UIManager>geto("uiManager").updateHealthDisplay();
