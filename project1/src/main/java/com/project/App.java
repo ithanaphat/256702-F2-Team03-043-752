@@ -326,7 +326,7 @@ public class App extends GameApplication {
         // ส่งรูปไปในanimation
         Player player = new Player("playerimage.png");
         // สร้างผู้เล่น
-        Entity playerEntity = player.createPlayer(200, 0, 2, 30);
+        Entity playerEntity = player.createPlayer(200, 0, 2, 1);
         // สร้างstats
         stats = player.getStats(); // ดึง Stats จาก Player
         FXGL.set("playerStats", stats);
